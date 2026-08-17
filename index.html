@@ -3489,25 +3489,25 @@ function getSpecialFactorLevel(name) {
 function isFactorValidInSlot2(factorName, f1Name) {
   if (!factorName) return true; // empty is always valid
 
-  // 战气系列 factors are NEVER valid in slot 2
-  if (factorName.indexOf('战气') !== -1) return false;
+    // 戰氣系列 factors are NEVER valid in slot 2
+  if (factorName.indexOf('戰氣') !== -1) return false;
 
-  // 当因子1为战气系列时，因子2不能为以下因子
-  if (f1Name && f1Name.indexOf('战气') !== -1) {
-    var ZQ_F2_BANNED = { '追击': true, '穷寇心': true, '刀上舞': true, '先发制人': true, '修罗': true, '身无长技': true, '骰子剑': true };
+  // 當因子1為戰氣系列時，因子2不能為以下因子
+  if (f1Name && f1Name.indexOf('戰氣') !== -1) {
+    var ZQ_F2_BANNED = { '追擊': true, '窮鼠': true, '一線之隔': true, '先制': true, '修羅': true, '手無寸鐵': true, '骰子剑': true };
     if (ZQ_F2_BANNED[factorName]) return false;
   }
 
-  // 钳蟹 combination exception: 钳蟹的共鸣(f1) + 终极钳蟹因子(f2) is valid
-  if (f1Name === '钳蟹的共鸣' && factorName === '终极钳蟹因子') return true;
+  // 蟹 combination exception: 蟹之共鳴(f1) + 终極蟹因子(f2) is valid
+  if (f1Name === '蟹之共鳴' && factorName === '终極蟹因子') return true;
 
   // Hard-coded invalid factors list
   if (FACTOR_INVALID_SLOT2[factorName]) return false;
 
-  // Exclusive factor rule: if f2 is a non-战气 character exclusive factor,
-  // then f1 must also be a non-战气 character exclusive factor
-  if (ALL_EXCLUSIVE_FACTORS[factorName] && factorName.indexOf('战气') === -1) {
-    if (!f1Name || !ALL_EXCLUSIVE_FACTORS[f1Name] || f1Name.indexOf('战气') !== -1) {
+  // Exclusive factor rule: if f2 is a non-戰氣 character exclusive factor,
+  // then f1 must also be a non-戰氣 character exclusive factor
+  if (ALL_EXCLUSIVE_FACTORS[factorName] && factorName.indexOf('戰氣') === -1) {
+    if (!f1Name || !ALL_EXCLUSIVE_FACTORS[f1Name] || f1Name.indexOf('戰氣') !== -1) {
       return false;
     }
   }
@@ -3550,9 +3550,9 @@ function showToast(msg, type) {
 function saveToLocal() {
   try {
     localStorage.setItem(LS_KEY, JSON.stringify(state));
-    showToast('配装数据已保存到浏览器本地存储！', 'success');
+    showToast('配裝數據已保存到浏覽器本地存储！', 'success');
   } catch (e) {
-    showToast('保存失败：' + e.message, 'error');
+    showToast('保存失敗：' + e.message, 'error');
   }
 }
 
@@ -3587,12 +3587,12 @@ function loadFromLocal() {
   try {
     var raw = localStorage.getItem(LS_KEY);
     if (!raw) {
-      showToast('没有找到本地存储的配装数据', 'error');
+      showToast('没有找到本地存储的配裝數據', 'error');
       return;
     }
     var data = JSON.parse(raw);
     if (!data.weapon || !WEAPONS[data.weapon]) {
-      showToast('数据格式无效', 'error');
+      showToast('數據格式無效', 'error');
       return;
     }
     // Ensure data structure
@@ -3606,18 +3606,18 @@ function loadFromLocal() {
     if (data.mastery.synDef2 === undefined) data.mastery.synDef2 = 0;
     if (data.mastery.atk30 === undefined) data.mastery.atk30 = 0;
     if (!data.limitBreak || !Array.isArray(data.limitBreak) || data.limitBreak.length !== 4) {
-      data.limitBreak = [['攻击力', 10, 2000], ['暴击率', 10, 20], ['HP', 10, 5000], ['昏厥值', 10, 50]];
+      data.limitBreak = [['攻擊力', 10, 2000], ['爆擊機率', 10, 20], ['HP', 10, 5000], ['暈眩值', 10, 50]];
     }
     // Ensure each entry has 3 elements
-    data.limitBreak.forEach(function(e, i) { if (!e || e.length < 3) data.limitBreak[i] = ['攻击力', 10, 2000]; });
+    data.limitBreak.forEach(function(e, i) { if (!e || e.length < 3) data.limitBreak[i] = ['攻擊力', 10, 2000]; });
     if (data.awakenLevel === undefined || data.awakenLevel === null) data.awakenLevel = 0;
     migrateWeaponSkills(data);
     state = data;
     window.state = state;
     renderAll();
-    showToast('配装数据已从本地加载！', 'success');
+    showToast('配裝數據已從本地加載！', 'success');
   } catch (e) {
-    showToast('加载失败：' + e.message, 'error');
+    showToast('加載失敗：' + e.message, 'error');
   }
 }
 
@@ -3647,14 +3647,14 @@ function loadCustomPresetsFromStorage() {
 function saveCustomPresetsToStorage() {
   try {
     localStorage.setItem(CUSTOM_PRESETS_KEY, JSON.stringify(customPresets));
-  } catch(e) { showToast('保存预设失败：' + e.message, 'error'); }
+  } catch(e) { showToast('保存預設失敗：' + e.message, 'error'); }
 }
 
 function updatePresetSelect() {
   var sel = document.getElementById('presetSelect');
   // Remove all custom options (keep placeholder only)
   while (sel.options.length > 1) { sel.remove(1); }
-  var currentChar = state.character || '主人公';
+  var currentChar = state.character || '主角';
   var prefix = currentChar + '_';
   var keys = Object.keys(customPresets).sort();
   var shown = 0;
@@ -3688,33 +3688,33 @@ function executeSavePreset() {
   var name = document.getElementById('savePresetName').value.trim();
   var msgEl = document.getElementById('savePresetMsg');
   if (!name) {
-    msgEl.textContent = '请输入预设名称';
+    msgEl.textContent = '請输入預設名稱';
     return;
   }
   if (name.length > 25) {
-    msgEl.textContent = '名称不能超过25个字符';
+    msgEl.textContent = '名稱不能超過25個字符';
     return;
   }
   // Prepend character name for per-character preset storage
-  var currentChar = state.character || '主人公';
+  var currentChar = state.character || '主角';
   var fullKey = currentChar + '_' + name;
   // Check duplicate
   if (customPresets[fullKey]) {
-    if (!confirm('预设「' + name + '」已存在，是否覆盖？')) return;
+    if (!confirm('預設「' + name + '」已存在，是否覆盖？')) return;
   }
   try {
     customPresets[fullKey] = deepClone(state);
     saveCustomPresetsToStorage();
     updatePresetSelect();
     closeSavePresetModal();
-    showToast('已保存自定义预设「' + name + '」', 'success');
+    showToast('已保存自定義預設「' + name + '」', 'success');
   } catch(e) {
-    msgEl.textContent = '保存失败：' + e.message;
+    msgEl.textContent = '保存失敗：' + e.message;
   }
 }
 
 function deleteCustomPreset(name) {
-  if (!confirm('确认删除预设「' + name + '」？')) return;
+  if (!confirm('確認删除預設「' + name + '」？')) return;
   delete customPresets[name];
   saveCustomPresetsToStorage();
   updatePresetSelect();
@@ -3722,26 +3722,26 @@ function deleteCustomPreset(name) {
   var sel = document.getElementById('presetSelect');
   if (sel.value === 'custom_' + name) { sel.value = ''; }
   renderCustomPresetList();
-  showToast('已删除预设「' + name + '」', 'info');
+  showToast('已删除預設「' + name + '」', 'info');
 }
 
 function renderCustomPresetList() {
   var el = document.getElementById('customPresetList');
   if (!el) return;
-  var currentChar = state.character || '主人公';
+  var currentChar = state.character || '主角';
   var prefix = currentChar + '_';
   var allKeys = Object.keys(customPresets).sort();
   var keys = allKeys.filter(function(k) { return k.indexOf(prefix) === 0; });
   if (keys.length === 0) {
-    el.innerHTML = '<div style="color:var(--text-dim);font-size:0.82em;">暂无「' + currentChar + '」的自定义预设</div>';
+    el.innerHTML = '<div style="color:var(--text-dim);font-size:0.82em;">暂無「' + currentChar + '」的自定義預設</div>';
     return;
   }
-  var html = '<div style="color:var(--text-dim);font-size:0.82em;margin-bottom:6px;">「' + currentChar + '」的预设（点击 ✕ 删除）：</div>';
+  var html = '<div style="color:var(--text-dim);font-size:0.82em;margin-bottom:6px;">「' + currentChar + '」的預設（點擊 ✕ 删除）：</div>';
   for (var i = 0; i < keys.length; i++) {
     var displayName = keys[i].substring(prefix.length);
     html += '<div class="cust-preset-item">' +
       '<span class="cust-preset-item-name">📌 ' + displayName + '</span>' +
-      '<button class="cust-preset-item-del" onclick="deleteCustomPreset(\'' + keys[i].replace(/'/g, "\\'") + '\')" title="删除此预设">✕</button>' +
+      '<button class="cust-preset-item-del" onclick="deleteCustomPreset(\'' + keys[i].replace(/'/g, "\\'") + '\')" title="删除此預設">✕</button>' +
       '</div>';
   }
   el.innerHTML = html;
@@ -3760,14 +3760,14 @@ function exportBuild() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  showToast('配装数据已导出为 JSON 文件！', 'success');
+  showToast('配裝數據已導出為 JSON 文件！', 'success');
 }
 
 function openImportModal() {
   document.getElementById('modalOverlay').classList.remove('hidden');
   document.getElementById('modalTextarea').value = '';
   document.getElementById('modalFileInput').value = '';
-  document.getElementById('modalTitle').textContent = '导入配装数据';
+  document.getElementById('modalTitle').textContent = '導入配裝數據';
 }
 
 function closeModal() {
@@ -3777,13 +3777,13 @@ function closeModal() {
 function executeImport() {
   var jsonStr = document.getElementById('modalTextarea').value.trim();
   if (!jsonStr) {
-    showToast('请粘贴 JSON 数据', 'error');
+    showToast('請黏貼 JSON 數據', 'error');
     return;
   }
   try {
     var data = JSON.parse(jsonStr);
     if (!data.weapon || !WEAPONS[data.weapon]) {
-      showToast('JSON 格式不正确，缺少有效的 weapon 字段', 'error');
+      showToast('JSON 格式不正確，缺少有效的 weapon 字段', 'error');
       return;
     }
     data.blessings = data.blessings || [];
@@ -3801,9 +3801,9 @@ function executeImport() {
     window.state = state;
     renderAll();
     closeModal();
-    showToast('配装数据导入成功！', 'success');
+    showToast('配裝數據導入成功！', 'success');
   } catch (e) {
-    showToast('JSON 解析失败：' + e.message, 'error');
+    showToast('JSON 解析失敗：' + e.message, 'error');
   }
 }
 
@@ -3858,28 +3858,28 @@ function parseShareCode(code) {
   var m = code.match(/^GBF(\d+):(.+)\$([0-9a-fA-F]{8})$/);
   if (!m) return null;
   var version = m[1], base64 = m[2], checksumHex = m[3];
-  if (version !== SHARE_VERSION) return { error: '分享码版本不兼容（v' + version + '，当前支持v' + SHARE_VERSION + '）' };
+  if (version !== SHARE_VERSION) return { error: '分享碼版本不兼容（v' + version + '，當前支持v' + SHARE_VERSION + '）' };
 
   var jsonStr;
   try {
     jsonStr = base64ToUtf8(base64);
   } catch (e) {
-    return { error: '分享码格式错误，无法解码' };
+    return { error: '分享碼格式错误，無法解碼' };
   }
 
   var expectedChecksum = computeChecksum(jsonStr);
   if (expectedChecksum !== checksumHex.toLowerCase()) {
-    return { error: '分享码校验失败，数据可能已损坏或被篡改' };
+    return { error: '分享碼校驗失敗，數據可能已損壞或被篡改' };
   }
 
   try {
     var data = JSON.parse(jsonStr);
     if (!data.weapon || !WEAPONS[data.weapon]) {
-      return { error: '分享码数据无效：缺少有效的 weapon 字段' };
+      return { error: '分享碼數據無效：缺少有效的 weapon 字段' };
     }
     return { data: data };
   } catch (e) {
-    return { error: '分享码数据解析失败：' + e.message };
+    return { error: '分享碼數據解析失敗：' + e.message };
   }
 }
 
@@ -3903,12 +3903,12 @@ function closeShareModal() {
 function copyShareCode() {
   var code = document.getElementById('shareCodeDisplay').textContent;
   if (!code || code === '生成中...') {
-    showToast('没有可复制的分享码', 'error');
+    showToast('没有可複製的分享碼', 'error');
     return;
   }
   try {
     navigator.clipboard.writeText(code).then(function() {
-      showToast('分享码已复制到剪贴板！', 'success');
+      showToast('分享碼已複製到剪貼板！', 'success');
     }, function() {
       // Fallback for older browsers
       var ta = document.createElement('textarea');
@@ -3919,10 +3919,10 @@ function copyShareCode() {
       ta.select();
       document.execCommand('copy');
       document.body.removeChild(ta);
-      showToast('分享码已复制到剪贴板！', 'success');
+      showToast('分享碼已複製到剪貼板！', 'success');
     });
   } catch (e) {
-    showToast('复制失败：' + e.message, 'error');
+    showToast('複製失敗：' + e.message, 'error');
   }
 }
 
@@ -3936,12 +3936,12 @@ function onShareInputChange() {
 function restoreFromShareCode() {
   var input = document.getElementById('shareRestoreInput').value.trim();
   if (!input) {
-    showToast('请先粘贴分享码', 'error');
+    showToast('請先黏貼分享碼', 'error');
     return;
   }
   var result = parseShareCode(input);
   if (!result) {
-    showToast('无效的分享码格式', 'error');
+    showToast('無效的分享碼格式', 'error');
     return;
   }
   if (result.error) {
@@ -3965,10 +3965,10 @@ function restoreFromShareCode() {
   window.state = state;
   renderAll();
   closeShareModal();
-  showToast('分享码解析成功，配装已还原！', 'success');
+  showToast('分享碼解析成功，配裝已还原！', 'success');
 }
 
-// 自适应字体大小：在容器宽度内保持单行，不溢出，随容器缩放，带最大上限
+// 自適應字體大小：在容器宽度内保持單行，不溢出，随容器缩放，带最大上限
 function fitText(elements, options) {
   options = options || {};
   var minSize = options.minSize || 9;
@@ -4040,7 +4040,7 @@ function fitText(elements, options) {
   });
 }
 
-// 批量自适应 + 监听容器尺寸变化
+// 批量自適應 + 監聽容器尺寸變化
 var masteryFitObserver = null;
 function setupMasteryTextFit() {
   fitText('.mastery-name:not(.multiline)', { minSize: 9, maxSize: 14 });
@@ -4147,26 +4147,26 @@ document.addEventListener('DOMContentLoaded', function() {
     if (data.mastery.synDef2 === undefined) data.mastery.synDef2 = 0;
       if (data.mastery.atk30 === undefined) data.mastery.atk30 = 0;
       if (!data.limitBreak || !Array.isArray(data.limitBreak) || data.limitBreak.length !== 4) {
-        data.limitBreak = [['攻击力', 10, 2000], ['暴击率', 10, 20], ['HP', 10, 5000], ['昏厥值', 10, 50]];
+        data.limitBreak = [['攻擊力', 10, 2000], ['爆擊機率', 10, 20], ['HP', 10, 5000], ['暈眩值', 10, 50]];
       }
-      data.limitBreak.forEach(function(e, i) { if (!e || e.length < 3) data.limitBreak[i] = ['攻击力', 10, 2000]; });
+      data.limitBreak.forEach(function(e, i) { if (!e || e.length < 3) data.limitBreak[i] = ['攻擊力', 10, 2000]; });
       if (data.awakenLevel === undefined || data.awakenLevel === null) data.awakenLevel = 0;
       migrateWeaponSkills(data);
       state = data;
     window.state = state;
       renderAll();
-      showToast('已从分享链接还原配装！', 'success');
+      showToast('已從分享链接还原配裝！', 'success');
       // Clean URL without reloading
       if (history.replaceState) {
         var cleanUrl = window.location.pathname + window.location.hash;
         history.replaceState(null, '', cleanUrl);
       }
     } else {
-      showToast(result ? result.error : '链接中的分享码无效', 'error');
+      showToast(result ? result.error : '链接中的分享碼無效', 'error');
     }
   }
 
-  // 初始化专精项文字自适应
+  // 初始化戰技项文字自適應
   setupMasteryTextFit();
 });
 
@@ -4179,7 +4179,7 @@ function loadPreset(key) {
       state = deepClone(customPresets[name]);
       window.state = state;
       renderAll();
-      showToast('已加载自定义预设「' + name + '」', 'success');
+      showToast('已加載自定義預設「' + name + '」', 'success');
     }
     return;
   }
@@ -4187,7 +4187,7 @@ function loadPreset(key) {
   state = deepClone(PRESETS[key]);
   window.state = state;
   renderAll();
-  showToast('已加载预设配装', 'success');
+  showToast('已加載預設配裝', 'success');
 }
 
 // ============ SCREENSHOT (VERTICAL VIEW) ============
@@ -4202,9 +4202,9 @@ function buildScreenshotView() {
   var html = '';
 
   // Header
-  var charName = state.character || '主人公';
+  var charName = state.character || '主角';
   html += '<div class="sv-header">';
-  html += '<h1>🌸 碧蓝幻想 Relink · 因子配装模拟器</h1>';
+  html += '<h1>🌸 碧藍幻想 Relink · 因子配裝模擬器</h1>';
   html += '<div class="sv-sub">Granblue Fantasy Relink — Factor Build Simulator</div>';
   html += '<div style="margin-top:0.5em;font-size:1.1em;font-weight:700;color:#333;">👤 角色：' + charName + '</div>';
   html += '</div>';
@@ -4212,10 +4212,10 @@ function buildScreenshotView() {
   // === 1. Weapon ===
   var awakenLv = state.awakenLevel || 0;
   html += '<div class="sv-section">';
-  html += '<div class="sv-section-title">🗡️ 武器选择</div>';
+  html += '<div class="sv-section-title">🗡️ 武器選擇</div>';
   html += '<div class="sv-weapon-name">' + state.weapon + '</div>';
   // Awaken level badge
-  html += '<div class="sv-awaken-badge">⭐ 觉醒等级 ' + awakenLv + '/10' + (awakenLv === 0 ? '（技能未解锁）' : awakenLv === 10 ? '（完全觉醒）' : '') + '</div>';
+  html += '<div class="sv-awaken-badge">⭐ 覺醒等級 ' + awakenLv + '/10' + (awakenLv === 0 ? '（技能未解鎖）' : awakenLv === 10 ? '（完全覺醒）' : '') + '</div>';
   html += '<div class="sv-weapon-stats">';
   w.subStats.forEach(function(s) {
     if (s[0]) {
@@ -4223,63 +4223,63 @@ function buildScreenshotView() {
       var lvText = effLv > 0 ? 'Lv.' + effLv : '—';
       var note = '';
       if (isChaoFanSkill(s[0]) && awakenLv < 10) {
-        note = ' <span style="color:#c62828;font-size:0.75em;">(觉醒Lv.10解锁)</span>';
+        note = ' <span style="color:#c62828;font-size:0.75em;">(覺醒Lv.10解鎖)</span>';
         lvText = '<span style="color:#9e9e9e;">—</span>';
       } else if (isChaoFanSkill(s[0]) && awakenLv >= 10) {
-        note = ' <span style="color:#2e7d32;font-size:0.75em;">(解锁)</span>';
+        note = ' <span style="color:#2e7d32;font-size:0.75em;">(解鎖)</span>';
       }
       html += '<div class="sv-stat"><span class="sv-sname">' + s[0] + note + '</span><span class="sv-slv">' + lvText + '</span></div>';
     }
   });
   w.awakenBonus.forEach(function(s) {
-    html += '<div class="sv-stat"><span class="sv-sname">' + s[0] + '(觉醒)</span><span class="sv-slv">Lv.' + s[1] + '</span></div>';
+    html += '<div class="sv-stat"><span class="sv-sname">' + s[0] + '(覺醒)</span><span class="sv-slv">Lv.' + s[1] + '</span></div>';
   });
   html += '</div>';
   // Weapon skill
   if (awakenLv >= 1) {
     if (state.weaponSkill1 && state.weaponSkill1[0]) {
       var effLv1 = getWeaponSkillEffectiveLv(w.weaponSkill1.level, awakenLv);
-      html += '<div class="sv-weapon-skill"><span class="sv-ws-label">🔧 技能栏1</span><span class="sv-ws-name cat-' + getFactorCategory(state.weaponSkill1[0]) + '">' + state.weaponSkill1[0] + '</span><span class="sv-ws-lv">Lv.' + effLv1 + '</span></div>';
+      html += '<div class="sv-weapon-skill"><span class="sv-ws-label">🔧 技能欄1</span><span class="sv-ws-name cat-' + getFactorCategory(state.weaponSkill1[0]) + '">' + state.weaponSkill1[0] + '</span><span class="sv-ws-lv">Lv.' + effLv1 + '</span></div>';
     }
     if (state.weaponSkill2 && state.weaponSkill2[0] && w.weaponSkill2) {
       var effLv2 = getWeaponSkillEffectiveLv(w.weaponSkill2.level, awakenLv);
-      html += '<div class="sv-weapon-skill"><span class="sv-ws-label">🔧 技能栏2</span><span class="sv-ws-name cat-' + getFactorCategory(state.weaponSkill2[0]) + '">' + state.weaponSkill2[0] + '</span><span class="sv-ws-lv">Lv.' + effLv2 + '</span></div>';
+      html += '<div class="sv-weapon-skill"><span class="sv-ws-label">🔧 技能欄2</span><span class="sv-ws-name cat-' + getFactorCategory(state.weaponSkill2[0]) + '">' + state.weaponSkill2[0] + '</span><span class="sv-ws-lv">Lv.' + effLv2 + '</span></div>';
     }
   }
   if (w.factorEnhance > 0) {
-    html += '<div class="sv-weapon-enhance">⚡ 因子强化 Lv.' + w.factorEnhance + ' — 栏位+级</div>';
+    html += '<div class="sv-weapon-enhance">⚡ 因子强化 Lv.' + w.factorEnhance + ' — 欄位+級</div>';
   }
   html += '</div>';
 
   // === 2. Character Stats ===
   html += '<div class="sv-section">';
-  html += '<div class="sv-section-title">📋 人物属性</div>';
+  html += '<div class="sv-section-title">📋 人物屬性</div>';
   html += '<div class="sv-char-grid">';
   html += '<div class="sv-char-item"><span class="sv-cname">❤️ HP</span><span class="sv-cvalue">' + cs.hp.final.toLocaleString('en-US') + '</span></div>';
-  html += '<div class="sv-char-item"><span class="sv-cname">⚔️ 攻击力</span><span class="sv-cvalue">' + cs.atk.final.toLocaleString('en-US') + '</span></div>';
-  html += '<div class="sv-char-item"><span class="sv-cname">💥 暴击率</span><span class="sv-cvalue">' + cs.crit.final + '%</span></div>';
-  html += '<div class="sv-char-item"><span class="sv-cname">🔨 昏厥值</span><span class="sv-cvalue">' + cs.stun.final + '</span></div>';
-  html += '<div class="sv-char-item full"><span class="sv-cname">🛡️ 减伤率</span><span class="sv-cvalue">' + cs.dr.final + '%</span></div>';
-  html += '<div class="sv-char-item full"><span class="sv-cname">⬆️ 伤害上限</span><span class="sv-cvalue">+' + cs.cap.final + '%</span></div>';
+  html += '<div class="sv-char-item"><span class="sv-cname">⚔️ 攻擊力</span><span class="sv-cvalue">' + cs.atk.final.toLocaleString('en-US') + '</span></div>';
+  html += '<div class="sv-char-item"><span class="sv-cname">💥 爆擊機率</span><span class="sv-cvalue">' + cs.crit.final + '%</span></div>';
+  html += '<div class="sv-char-item"><span class="sv-cname">🔨 暈眩值</span><span class="sv-cvalue">' + cs.stun.final + '</span></div>';
+  html += '<div class="sv-char-item full"><span class="sv-cname">🛡️ 减傷率</span><span class="sv-cvalue">' + cs.dr.final + '%</span></div>';
+  html += '<div class="sv-char-item full"><span class="sv-cname">⬆️ 傷害上限</span><span class="sv-cvalue">+' + cs.cap.final + '%</span></div>';
   html += '</div>';
   html += '</div>';
 
   // === 3. Mastery ===
   html += '<div class="sv-section">';
-  html += '<div class="sv-section-title">⭐ 人物专精</div>';
+  html += '<div class="sv-section-title">⭐ 大師戰技</div>';
   html += '<div class="sv-mastery-grid">';
   var hasMastery = false;
   function addMstRow(name, val, unit) {
     if (val > 0) { hasMastery = true; html += '<div class="sv-mastery-item"><span class="sv-mname">' + name + '</span><span class="sv-mvalue">' + val + unit + '</span></div>'; }
   }
   addMstRow('❤️ HP上限', Math.min(mst.hp || 0, 4), '次');
-  addMstRow('⚔️ 攻击力 +20%', Math.min(mst.atk || 0, 3), '次');
-  addMstRow('⚔️ 攻击力 +30%', Math.min(mst.atk30 || 0, 2), '次');
-  addMstRow('🔗 基础能力联动', Math.min(mst.synBasic || 0, 2), '次');
-  addMstRow('🔗 攻击类联动', Math.min(mst.synAtk || 0, 2), '次');
-  addMstRow('🔗 防御与支援联动（HP）', Math.min(mst.synDef || 0, 1), '次');
-  addMstRow('🛡️ 防御与支援联动（防御%）', Math.min(mst.synDef2 || 0, 1), '次');
-  if (!hasMastery) { html += '<div class="sv-mastery-empty">无</div>'; }
+  addMstRow('⚔️ 攻擊力 +20%', Math.min(mst.atk || 0, 3), '次');
+  addMstRow('⚔️ 攻擊力 +30%', Math.min(mst.atk30 || 0, 2), '次');
+  addMstRow('🔗 基礎能力聯動', Math.min(mst.synBasic || 0, 2), '次');
+  addMstRow('🔗 攻擊類聯動', Math.min(mst.synAtk || 0, 2), '次');
+  addMstRow('🔗 防禦與支援聯動（HP）', Math.min(mst.synDef || 0, 1), '次');
+  addMstRow('🛡️ 防禦與支援聯動（防禦%）', Math.min(mst.synDef2 || 0, 1), '次');
+  if (!hasMastery) { html += '<div class="sv-mastery-empty">無</div>'; }
   html += '</div>';
   html += '</div>';
 
@@ -4303,7 +4303,7 @@ function buildScreenshotView() {
       html += '</div>';
     }
   }
-  if (!hasLimitBreak) { html += '<div class="sv-lb-empty">无</div>'; }
+  if (!hasLimitBreak) { html += '<div class="sv-lb-empty">無</div>'; }
   html += '</div>';
   html += '</div>';
 
@@ -4311,9 +4311,9 @@ function buildScreenshotView() {
   html += '<div class="sv-bs-row">';
   // Blessings
   html += '<div class="sv-bs-col">';
-  html += '<div class="sv-bs-title">✨ 祝福</div>';
+  html += '<div class="sv-bs-title">✨ 加護</div>';
   if (state.blessings.length === 0) {
-    html += '<div class="sv-entry"><span class="sv-ename" style="color:#c48da0;">无</span></div>';
+    html += '<div class="sv-entry"><span class="sv-ename" style="color:#c48da0;">無</span></div>';
   }
   state.blessings.forEach(function(b) {
     html += '<div class="sv-entry"><span class="sv-ename">' + (b[0]||'—') + '</span><span class="sv-elv">Lv.' + (b[1]||0) + '</span></div>';
@@ -4323,7 +4323,7 @@ function buildScreenshotView() {
   html += '<div class="sv-bs-col">';
   html += '<div class="sv-bs-title">💎 召唤石</div>';
   if (state.summons.length === 0) {
-    html += '<div class="sv-entry"><span class="sv-ename" style="color:#c48da0;">无</span></div>';
+    html += '<div class="sv-entry"><span class="sv-ename" style="color:#c48da0;">無</span></div>';
   }
   state.summons.forEach(function(s) {
     html += '<div class="sv-entry"><span class="sv-ename">' + (s[0]||'—') + '</span><span class="sv-elv">Lv.' + (s[1]||0) + '</span></div>';
@@ -4333,7 +4333,7 @@ function buildScreenshotView() {
 
   // === 6. Factor Pairs ===
   html += '<div class="sv-section">';
-  html += '<div class="sv-section-title">🧬 因子配装</div>';
+  html += '<div class="sv-section-title">🧬 因子配裝</div>';
   html += '<div class="sv-factor-grid">';
   state.factorPairs.forEach(function(fp, i) {
     html += '<div class="sv-factor-item">';
@@ -4350,10 +4350,10 @@ function buildScreenshotView() {
 
   // === 7. Summary ===
   html += '<div class="sv-section">';
-  html += '<div class="sv-section-title">📊 因子等级汇总</div>';
+  html += '<div class="sv-section-title">📊 因子等級滙總</div>';
   html += '<div class="sv-type-stats-row">' + buildTypeStatsHTML(computeFactorTypeDetail()) + '</div>';
   if (overflowCount > 0) {
-    html += '<div class="sv-overflow-warn">⚠ ' + overflowCount + ' 项溢出 浪费 ' + overflowWasted + ' 级（有效 ' + calc.totalCapped + ' / 实际 ' + calc.totalActual + '）</div>';
+    html += '<div class="sv-overflow-warn">⚠ ' + overflowCount + ' 项溢出 浪費 ' + overflowWasted + ' 級（有效 ' + calc.totalCapped + ' / 實際 ' + calc.totalActual + '）</div>';
   }
   html += '<div class="sv-summary-grid">';
   items.forEach(function(it) {
@@ -4369,7 +4369,7 @@ function buildScreenshotView() {
     html += '</div>';
   });
   html += '</div>';
-  html += '<div class="sv-total-bar"><span>总投入等级</span><span>' + calc.totalCapped + '</span></div>';
+  html += '<div class="sv-total-bar"><span>總投入等級</span><span>' + calc.totalCapped + '</span></div>';
   html += '</div>';
 
   document.getElementById('screenshotView').innerHTML = html;
@@ -4390,7 +4390,7 @@ function captureScreenshot() {
   header.style.display = 'none';
   sv.style.display = 'block';
 
-  showToast('正在生成截图...', 'info');
+  showToast('正在生成截圖...', 'info');
 
   html2canvas(sv, {
     backgroundColor: '#ffffff',
@@ -4429,13 +4429,13 @@ function captureScreenshot() {
       '<div class="sr-info-item"><span class="sr-info-label">📐</span><span class="sr-info-value">' + canvas.width + ' × ' + canvas.height + ' px</span></div>';
     document.getElementById('srOverlay').classList.remove('hidden');
 
-    showToast('截图已生成，可预览并下载', 'success');
+    showToast('截圖已生成，可預覽並下載', 'success');
   }).catch(function(err) {
     mainContent.style.display = '';
     toolbar.style.display = '';
     header.style.display = '';
     sv.style.display = 'none';
-    showToast('截图失败：' + err.message, 'error');
+    showToast('截圖失敗：' + err.message, 'error');
     console.error('Screenshot error:', err);
   });
 }
@@ -4449,7 +4449,7 @@ function downloadScreenshotResult() {
   link.download = lastScreenshot.filename;
   link.href = lastScreenshot.dataUrl;
   link.click();
-  showToast('图片已下载！', 'success');
+  showToast('圖片已下載！', 'success');
 }
 
 function closeScreenshotResult() {
@@ -4465,17 +4465,17 @@ function loadPreset(key) {
       state = deepClone(customPresets[fullKey]);
       window.state = state;
       if (!state.character || !CHARACTER_I[state.character]) {
-        state.character = '主人公';
+        state.character = '主角';
       }
       renderAll();
       autoSave();
       var sel = document.getElementById('presetSelect');
       sel.value = key;
       // Extract display name (remove character prefix)
-      var currentChar = state.character || '主人公';
+      var currentChar = state.character || '主角';
       var prefix = currentChar + '_';
       var displayName = fullKey.indexOf(prefix) === 0 ? fullKey.substring(prefix.length) : fullKey;
-      showToast('已加载自定义预设「' + displayName + '」', 'success');
+      showToast('已加載自定義預設「' + displayName + '」', 'success');
     }
     return;
   }
@@ -4483,13 +4483,13 @@ function loadPreset(key) {
   state = deepClone(PRESETS[key]);
   window.state = state;
   if (!state.character || !CHARACTER_I[state.character]) {
-    state.character = '主人公';
+    state.character = '主角';
   }
   renderAll();
-  autoSave(); // 持久化，避免刷新后丢失
+  autoSave(); // 持久化，避免刷新後丢失
   var sel = document.getElementById('presetSelect');
   sel.value = key;
-  showToast('已加载预设配装', 'success');
+  showToast('已加載預設配裝', 'success');
 }
 
 // ============ RENDER ============
@@ -4506,9 +4506,9 @@ function buildSearchableSelect(section, idx, field, value, allowEmpty) {
       '<span class="ss-arrow">▾</span>' +
     '</div>' +
     '<div class="ss-dropdown hidden">' +
-      '<input class="ss-search" placeholder="搜索因子名称...">' +
+      '<input class="ss-search" placeholder="搜索因子名稱...">' +
       '<div class="ss-options"></div>' +
-      '<div class="ss-empty hidden">无匹配结果</div>' +
+      '<div class="ss-empty hidden">無匹配结果</div>' +
     '</div>' +
   '</div>';
 }
@@ -4517,14 +4517,14 @@ function renderWeaponSelect() {
   var sel = document.getElementById('weaponSelect');
   var c = getCurrentChar();
   var keys = Object.keys(WEAPONS);
-  // Filter weapons: 4-weapon characters cannot use 弱点武器 or 昏厥武器
+  // Filter weapons: 4-weapon characters cannot use 弱點武器 or 暈眩武器
   var filtered = keys.filter(function(w) {
-    if (c.weaponCount === 4 && (w === '弱点武器' || w === '昏厥武器')) return false;
+    if (c.weaponCount === 4 && (w === '弱點武器' || w === '暈眩武器')) return false;
     return true;
   });
-  // If current weapon is not in filtered list, reset to 觉醒武器
+  // If current weapon is not in filtered list, reset to 覺醒武器
   if (filtered.indexOf(state.weapon) === -1) {
-    state.weapon = '觉醒武器';
+    state.weapon = '覺醒武器';
   }
   sel.innerHTML = filtered.map(function(w) {
     return '<option value="' + w + '"' + (state.weapon === w ? ' selected' : '') + '>' + w + '</option>';
@@ -4567,7 +4567,7 @@ function renderWeaponStats() {
   var awSel = document.getElementById('awakenSelect');
   var awOpts = '';
   for (var i = 0; i <= 10; i++) {
-    awOpts += '<option value="' + i + '"' + (awakenLv === i ? ' selected' : '') + '>' + i + ' 级' + (i === 0 ? '（技能未解锁）' : i === 10 ? '（完全觉醒）' : '') + '</option>';
+    awOpts += '<option value="' + i + '"' + (awakenLv === i ? ' selected' : '') + '>' + i + ' 級' + (i === 0 ? '（技能未解鎖）' : i === 10 ? '（完全覺醒）' : '') + '</option>';
   }
   awSel.innerHTML = awOpts;
   awSel.onchange = function() {
@@ -4590,9 +4590,9 @@ function renderWeaponStats() {
       var nameHtml = name;
       if (isChaoFanSkill(name)) {
         if (awakenLv >= 10) {
-          nameHtml += ' <span class="badge unlock">觉醒解锁</span>';
+          nameHtml += ' <span class="badge unlock">覺醒解鎖</span>';
         } else {
-          nameHtml += ' <span class="badge locked-badge">觉醒Lv.10解锁</span>';
+          nameHtml += ' <span class="badge locked-badge">覺醒Lv.10解鎖</span>';
         }
       }
       var lvHtml = effLv > 0 ? 'Lv.' + effLv : '<span style="color:var(--text-dim);">—</span>';
@@ -4600,7 +4600,7 @@ function renderWeaponStats() {
     }
   });
   w.awakenBonus.forEach(function(item) {
-    html += '<div class="stat-item bonus"><span class="stat-name">' + item[0] + ' <span class="badge">觉醒</span></span><span class="stat-lv">Lv.' + item[1] + '</span></div>';
+    html += '<div class="stat-item bonus"><span class="stat-name">' + item[0] + ' <span class="badge">覺醒</span></span><span class="stat-lv">Lv.' + item[1] + '</span></div>';
   });
   document.getElementById('weaponStats').innerHTML = html;
 
@@ -4673,7 +4673,7 @@ function renderWeaponStats() {
   var info = document.getElementById('enhanceInfo');
   if (w.factorEnhance > 0) {
     info.className = 'enhance-info';
-    info.innerHTML = '⚡ <b>' + state.weapon + '</b> 拥有 <b>因子强化 Lv.' + w.factorEnhance + '</b>，因子配装栏位等级额外 +' + w.factorEnhance + '（不影响祝福/召唤石）';
+    info.innerHTML = '⚡ <b>' + state.weapon + '</b> 擁有 <b>因子强化 Lv.' + w.factorEnhance + '</b>，因子配裝欄位等級額外 +' + w.factorEnhance + '（不影響加護/召唤石）';
   } else {
     info.className = 'enhance-info hidden';
   }
@@ -4689,7 +4689,7 @@ function renderBlessings() {
       '<button class="btn-remove" onclick="removeEntry(\'blessings\',' + i + ')">×</button>' +
     '</div>';
   });
-  html += state.blessings.length < MAX_BLESSINGS ? '<button class="btn btn-add" style="margin-top:6px" onclick="addEntry(\'blessings\')">+ 添加祝福</button>' : '<div style="margin-top:6px;color:#c48da0;font-size:13px;">祝福已达上限（' + MAX_BLESSINGS + '栏）</div>';
+  html += state.blessings.length < MAX_BLESSINGS ? '<button class="btn btn-add" style="margin-top:6px" onclick="addEntry(\'blessings\')">+ 添加加護</button>' : '<div style="margin-top:6px;color:#c48da0;font-size:13px;">加護已达上限（' + MAX_BLESSINGS + '欄）</div>';
   container.innerHTML = html;
 }
 
@@ -4703,7 +4703,7 @@ function renderSummons() {
       '<button class="btn-remove" onclick="removeEntry(\'summons\',' + i + ')">×</button>' +
     '</div>';
   });
-  html += state.summons.length < MAX_SUMMONS ? '<button class="btn btn-add" style="margin-top:6px" onclick="addEntry(\'summons\')">+ 添加召唤石</button>' : '<div style="margin-top:6px;color:#c48da0;font-size:13px;">召唤石已达上限（' + MAX_SUMMONS + '栏）</div>';
+  html += state.summons.length < MAX_SUMMONS ? '<button class="btn btn-add" style="margin-top:6px" onclick="addEntry(\'summons\')">+ 添加召唤石</button>' : '<div style="margin-top:6px;color:#c48da0;font-size:13px;">召唤石已达上限（' + MAX_SUMMONS + '欄）</div>';
   container.innerHTML = html;
 }
 
@@ -4721,11 +4721,11 @@ function renderFactorPairs() {
     var isSpecial1 = getSpecialFactorLevel(item[0]) !== null;
     var isSpecial2 = getSpecialFactorLevel(item[2]) !== null;
     var invalidF2 = item[2] && !isFactorValidInSlot2(item[2], item[0]);
-    // 可怕的漆黑钳蟹因子 在因子1时，因子2必须为空
-    if (item[0] === '可怕的漆黑钳蟹因子' && item[2]) {
+    // 可怕的漆黑蟹因子 在因子1時，因子2必须為空
+    if (item[0] === '可怕的漆黑蟹因子' && item[2]) {
       invalidF2 = true;
     }
-    // 相同的人物专属因子不能同时存在于因子1和因子2
+    // 相同的人物專屬因子不能同時存在于因子1和因子2
     if (item[0] && item[2] && item[0] === item[2] && ALL_EXCLUSIVE_FACTORS[item[0]]) {
       invalidF2 = true;
     }
@@ -4736,12 +4736,12 @@ function renderFactorPairs() {
       buildSearchableSelect('factorPairs', i, 'f1', item[0], false) +
       '<input class="lv-input' + (isSpecial1 ? ' lv-special' : '') + '" type="number" value="' + item[1] +
         '" min="0" max="99" data-section="factorPairs" data-idx="' + i + '" data-field="lv1"' +
-        (isSpecial1 ? ' readonly title="固定等级，不可修改"' : '') + '>' +
+        (isSpecial1 ? ' readonly title="固定等級，不可修改"' : '') + '>' +
       '<span class="pair-sep">+</span>' +
       buildSearchableSelect('factorPairs', i, 'f2', item[2], true) +
       '<input class="lv-input' + (isSpecial2 ? ' lv-special' : '') + '" type="number" value="' + item[3] +
         '" min="0" max="99" data-section="factorPairs" data-idx="' + i + '" data-field="lv2"' +
-        (isSpecial2 ? ' readonly title="固定等级，不可修改"' : '') + '>' +
+        (isSpecial2 ? ' readonly title="固定等級，不可修改"' : '') + '>' +
       '<button class="btn-remove" onclick="removeEntry(\'factorPairs\',' + i + ')">×</button>' +
     '</div>';
   });
@@ -4758,7 +4758,7 @@ function calculateAllLevels() {
   function addFactor(name, baseLevel, canEnhance) {
     if (!name || name === 'null' || name === '0') return;
     if (baseLevel <= 0) return;
-    // 特殊因子：固定等级，不累加
+    // 特殊因子：固定等級，不累加
     var sl = getSpecialFactorLevel(name);
     if (sl !== null) { levels[name] = sl; return; }
     var lv = baseLevel;
@@ -4812,7 +4812,7 @@ function lookupLevel(lv, table) {
   return table[lv - 1];
 }
 
-// Helper: piecewise linear interpolation (保留用于无表格数据的因子如金刚)
+// Helper: piecewise linear interpolation (保留用于無表格數據的因子如金剛)
 function interpLevel(lv, lvA, valA, lvB, valB) {
   if (lv <= 0) return 0;
   if (lv >= lvB) return valB;
@@ -4823,9 +4823,9 @@ function interpLevel(lv, lvA, valA, lvB, valB) {
 function calculateCharacterStats() {
   var w = WEAPONS[state.weapon];
   var baseKey = state.weapon;
-  if (state.weapon === '防御武器') {
+  if (state.weapon === '防禦武器') {
     var cd = getCurrentChar();
-    if (cd && cd.defenseSkill === '金刚') baseKey = '防御武器_金刚';
+    if (cd && cd.defenseSkill === '金剛') baseKey = '防禦武器_金剛';
   }
   var base = WEAPON_BASE_STATS[baseKey];
   var awakenLv = state.awakenLevel || 0;
@@ -4839,12 +4839,12 @@ function calculateCharacterStats() {
   var mtCap = mtStats ? mtStats.cap : 0;
   var mtCritDmg = mtStats ? mtStats.critDmg : 0;
   var mtDefPct = mtStats ? mtStats.defPct : 0;
-  var mtCondCaps = 0; // 条件伤害上限为条件触发，暂不计入固定数值
+  var mtCondCaps = 0; // 條件傷害上限為條件觸發，暂不計入固定數值
   // Collect all factor levels from all sources
   var lev = {};
   function add(n, lvVal, enhance) {
     if (!n || lvVal <= 0) return;
-    // 特殊因子：固定等级，不累加不受因子强化影响
+    // 特殊因子：固定等級，不累加不受因子强化影響
     var sl = getSpecialFactorLevel(n);
     if (sl !== null) { lev[n] = sl; return; }
     lev[n] = (lev[n] || 0) + (enhance && w.factorEnhance > 0 ? lvVal + w.factorEnhance : lvVal);
@@ -4890,13 +4890,13 @@ function calculateCharacterStats() {
     if (!f1) return;
     var cat = getFactorSynergy(f1);
     if (!cat) return;
-    if (cat === 'support') cat = 'defense'; // 支援类并入防御与支援联动
+    if (cat === 'support') cat = 'defense'; // 支援類並入防禦與支援聯動
     synCnt[cat] += 1;
     synList[cat].push(f1);
   });
-  // 因子联动每种类型最多计入的因子数
+  // 因子聯動每种類型最多計入的因子數
   var SYNERGY_CAP = 5;
-  var SYNERGY_CAP_DEFENSE = 5; // 防御与支援类上限5个
+  var SYNERGY_CAP_DEFENSE = 5; // 防禦與支援類上限5個
   synCnt.basic = Math.min(synCnt.basic, SYNERGY_CAP);
   synCnt.attack = Math.min(synCnt.attack, SYNERGY_CAP);
   synCnt.defense = Math.min(synCnt.defense, SYNERGY_CAP_DEFENSE);
@@ -4913,9 +4913,9 @@ function calculateCharacterStats() {
   // Synergy bonuses = total factor1 count × mastery × per-factor value
   var synCapBonus = synCnt.basic * mstSynBasic * 20;
   var synAtkBonus = synCnt.attack * mstSynAtk * 10;
-  // 防御与支援联动（HP）：因子上限4个，每因子+10000 HP
+  // 防禦與支援聯動（HP）：因子上限4個，每因子+10000 HP
   var synHpFlat = Math.min(synCnt.defense, 4) * mstSynDef * 10000;
-  // 防御与支援联动（防御%）：因子上限5个，每因子+6%防御（计入C区N项）
+  // 防禦與支援聯動（防禦%）：因子上限5個，每因子+6%防禦（計入C區N项）
   var mstSynDef2 = Math.min(mst.synDef2 || 0, 1);
 
   // Mastery bonuses (base character mastery + mastery tree)
@@ -4923,16 +4923,16 @@ function calculateCharacterStats() {
   var mstAtk20_30 = Math.min(mst.atk || 0, 3) * 20 + Math.min(mst.atk30 || 0, 2) * 30;
 
   // --- HP ---
-  var hpFlat = lookupLevel(lv('体力'), HP_TABLE);
+  var hpFlat = lookupLevel(lv('體力'), HP_TABLE);
   var brkHP = [];
-  brkHP.push(src('武器「' + state.weapon + '」基础HP', base.hp.toLocaleString('en-US'), '', 'base'));
-  if (lv('体力') > 0) brkHP.push(srcFlat('体力', lv('体力'), hpFlat));
-  if (has('终极钳蟹因子')) { var clv = lv('终极钳蟹因子'); var crabHp = clv >= 45 ? 8000 : clv >= 44 ? 5000 : clv >= 43 ? 4500 : clv >= 42 ? 4000 : clv >= 41 ? 3500 : 0; if (crabHp > 0) { hpFlat += crabHp; brkHP.push(src('终极钳蟹因子', '+' + crabHp + ' 固定', 'Lv.' + clv, 'flat')); } }
+  brkHP.push(src('武器「' + state.weapon + '」基礎HP', base.hp.toLocaleString('en-US'), '', 'base'));
+  if (lv('體力') > 0) brkHP.push(srcFlat('體力', lv('體力'), hpFlat));
+  if (has('终極蟹因子')) { var clv = lv('终極蟹因子'); var crabHp = clv >= 45 ? 8000 : clv >= 44 ? 5000 : clv >= 43 ? 4500 : clv >= 42 ? 4000 : clv >= 41 ? 3500 : 0; if (crabHp > 0) { hpFlat += crabHp; brkHP.push(src('终極蟹因子', '+' + crabHp + ' 固定', 'Lv.' + clv, 'flat')); } }
   var hpMultiplier = 1;
   var hpPctItems = [];
-  if (lv('守护') > 0) { var v = lookupLevel(lv('守护'), GUARD_TABLE); hpMultiplier *= (1 + v / 100); hpPctItems.push(srcPct('守护', lv('守护'), v)); }
-  if (lv('金刚') > 0) { var v = interpLevel(lv('金刚'), 15, 50, 30, 80); hpMultiplier *= (1 + v / 100); hpPctItems.push(srcPct('金刚', lv('金刚'), v)); }
-  if (has('钳蟹的报恩')) { hpMultiplier *= 1.20; hpPctItems.push(src('钳蟹的报恩', '+20%', '固定值', 'pct')); }
+  if (lv('守護') > 0) { var v = lookupLevel(lv('守護'), GUARD_TABLE); hpMultiplier *= (1 + v / 100); hpPctItems.push(srcPct('守護', lv('守護'), v)); }
+  if (lv('金剛') > 0) { var v = interpLevel(lv('金剛'), 15, 50, 30, 80); hpMultiplier *= (1 + v / 100); hpPctItems.push(srcPct('金剛', lv('金剛'), v)); }
+  if (has('蟹之報恩')) { hpMultiplier *= 1.20; hpPctItems.push(src('蟹之報恩', '+20%', '固定值', 'pct')); }
   if (has('天星之界')) { hpMultiplier *= 0.70; hpPctItems.push(src('天星之界', '-30%', '固定值', 'pct')); }
   if (has('暴君')) { hpMultiplier *= 0.50; hpPctItems.push(src('暴君', '-50%', '固定值', 'pct')); }
   var hpPctTotal = (hpMultiplier - 1) * 100;
@@ -4940,13 +4940,13 @@ function calculateCharacterStats() {
   // Synergy HP flat bonus (defense synergy: each factor1 +10000 per mastery level)
   var hpSynergyItems = [];
   if (synHpFlat > 0) {
-    hpSynergyItems.push(src('因子联动: 防御与支援类因子1 ×' + Math.min(synCnt.defense, 4), '+' + synHpFlat.toLocaleString('en-US'), '每因子+10,000 (上限4个)', 'synergy'));
-    brkHP.push(src('防御与支援类因子 ×' + Math.min(synCnt.defense, 4), '+' + synHpFlat.toLocaleString('en-US'), '每因子+10,000 (上限4个)', 'flat'));
+    hpSynergyItems.push(src('因子聯動: 防禦與支援類因子1 ×' + Math.min(synCnt.defense, 4), '+' + synHpFlat.toLocaleString('en-US'), '每因子+10,000 (上限4個)', 'synergy'));
+    brkHP.push(src('防禦與支援類因子 ×' + Math.min(synCnt.defense, 4), '+' + synHpFlat.toLocaleString('en-US'), '每因子+10,000 (上限4個)', 'flat'));
   }
 
   // Display HP tree contribution in breakdown
   if (mtHP > 0) {
-    brkHP.push(src('专精树 Max体力', '+' + mtHP.toLocaleString('en-US'), '专精树节点加成', 'mastery'));
+    brkHP.push(src('戰技樹 Max體力', '+' + mtHP.toLocaleString('en-US'), '戰技樹節點加成', 'mastery'));
   }
 
   // 上限突破 HP
@@ -4961,13 +4961,13 @@ function calculateCharacterStats() {
   var hpTotalFlat = hpFlat + mstHpFlat + synHpFlat + lbHP;
   var hp = Math.ceil((base.hp + hpTotalFlat) * hpMultiplier);
 
-  // 从 FACTOR_EFFECT_DATA 读取因子攻击力/伤害上限
+  // 從 FACTOR_EFFECT_DATA 讀取因子攻擊力/傷害上限
   function parsePct(s) { if (!s) return 0; return parseFloat(String(s).replace('%', '')) || 0; }
 
-  // HP线性插值因子列表（效果随HP在最小/最大之间变化）
-  var HP_DEP_FACTORS = ['伤害上限轰天'];
+  // HP线性插值因子列表（效果随HP在最小/最大之間變化）
+  var HP_DEP_FACTORS = ['傷害上限轟天'];
   function getHpDepValue(effs, mode) {
-    // effects结构: [minAtk, minCap, minHP, maxAtk, maxCap, maxHP]
+    // effects结構: [minAtk, minCap, minHP, maxAtk, maxCap, maxHP]
     if (effs.length < 6) return 0;
     var minAtk = parsePct(effs[0].value);
     var minCap = parsePct(effs[1].value);
@@ -4993,7 +4993,7 @@ function calculateCharacterStats() {
     if (HP_DEP_FACTORS.indexOf(name) !== -1) return getHpDepValue(effs, 'atk');
     var maxV = 0;
     for (var i = 0; i < effs.length; i++) {
-      if (effs[i].label && effs[i].label.indexOf('攻击力') !== -1) {
+      if (effs[i].label && effs[i].label.indexOf('攻擊力') !== -1) {
         var v = parsePct(effs[i].value); if (v > maxV) maxV = v;
       }
     }
@@ -5010,7 +5010,7 @@ function calculateCharacterStats() {
     if (HP_DEP_FACTORS.indexOf(name) !== -1) return getHpDepValue(effs, 'cap');
     var maxV = 0;
     for (var i = 0; i < effs.length; i++) {
-      if (effs[i].label && (effs[i].label.indexOf('伤害上限') !== -1 || effs[i].label.indexOf('上限') !== -1)) {
+      if (effs[i].label && (effs[i].label.indexOf('傷害上限') !== -1 || effs[i].label.indexOf('上限') !== -1)) {
         var v = parsePct(effs[i].value); if (v > maxV) maxV = v;
       }
     }
@@ -5033,28 +5033,28 @@ function calculateCharacterStats() {
   var havocActive = havocHp > 0 && hp <= havocHp;
 
   // --- ATK ---
-  // 公式: (基础 + 固定) × (1 + 组1%) × Π(1 + 因子%）
-  //   组1 = 专精% + 因子联动% （加算）
-  //   组2 = 各因子独立乘算
-  var atkFlat = lookupLevel(lv('攻击力'), ATK_TABLE);
+  // 公式: (基礎 + 固定) × (1 + 组1%) × Π(1 + 因子%）
+  //   组1 = 戰技% + 因子聯動% （加算）
+  //   组2 = 各因子獨立乘算
+  var atkFlat = lookupLevel(lv('攻擊力'), ATK_TABLE);
   var brkATK = [];
-  brkATK.push(src('武器「' + state.weapon + '」基础攻击力', base.atk.toLocaleString('en-US'), '', 'base'));
-  if (lv('攻击力') > 0) brkATK.push(srcFlat('攻击力', lv('攻击力'), atkFlat));
-  if (has('钳蟹的共鸣')) { atkFlat += 1000; brkATK.push(src('钳蟹的共鸣', '+1000 固定', '', 'flat')); }
-  // 上限突破 攻击力
+  brkATK.push(src('武器「' + state.weapon + '」基礎攻擊力', base.atk.toLocaleString('en-US'), '', 'base'));
+  if (lv('攻擊力') > 0) brkATK.push(srcFlat('攻擊力', lv('攻擊力'), atkFlat));
+  if (has('蟹之共鳴')) { atkFlat += 1000; brkATK.push(src('蟹之共鳴', '+1000 固定', '', 'flat')); }
+  // 上限突破 攻擊力
   var lbATK = 0;
   if (state.limitBreak) {
     state.limitBreak.forEach(function(entry) {
-      if (entry[0] === '攻击力') lbATK += parseFloat(entry[2]) || 0;
+      if (entry[0] === '攻擊力') lbATK += parseFloat(entry[2]) || 0;
     });
   }
-  if (lbATK > 0) { atkFlat += lbATK; brkATK.push(src('上限突破 攻击力', '+' + Math.round(lbATK).toLocaleString('en-US') + ' 固定', '', 'mastery')); }
+  if (lbATK > 0) { atkFlat += lbATK; brkATK.push(src('上限突破 攻擊力', '+' + Math.round(lbATK).toLocaleString('en-US') + ' 固定', '', 'mastery')); }
 
-  // 组1: 专精 + 因子联动（加算）
-  // 局外组1: 仅20%/30%专精 + 因子联动
+  // 组1: 戰技 + 因子聯動（加算）
+  // 局外组1: 僅20%/30%戰技 + 因子聯動
   var atkOutGroup1Pct = 0;
   var atkOutGroup1Items = [];
-  // 局内组1: 全部专精 + 因子联动（含专精树其他攻击力节点）
+  // 局内组1: 全部戰技 + 因子聯動（含戰技樹其他攻擊力節點）
   var atkInGroup1Pct = 0;
   var atkGroup1Items = [];
   var mstAtk20 = Math.min(mst.atk || 0, 3);
@@ -5062,61 +5062,61 @@ function calculateCharacterStats() {
   if (mstAtk20 > 0) {
     atkOutGroup1Pct += mstAtk20 * 20;
     atkInGroup1Pct += mstAtk20 * 20;
-    var item20 = src('人物专精 攻击力+20%', '+' + (mstAtk20 * 20) + '%', mstAtk20 + '次 ×20%', 'mastery');
+    var item20 = src('大師戰技 攻擊力+20%', '+' + (mstAtk20 * 20) + '%', mstAtk20 + '次 ×20%', 'mastery');
     atkOutGroup1Items.push(item20);
     atkGroup1Items.push(item20);
   }
   if (mstAtk30 > 0) {
     atkOutGroup1Pct += mstAtk30 * 30;
     atkInGroup1Pct += mstAtk30 * 30;
-    var item30 = src('人物专精 攻击力+30%', '+' + (mstAtk30 * 30) + '%', mstAtk30 + '次 ×30%', 'mastery');
+    var item30 = src('大師戰技 攻擊力+30%', '+' + (mstAtk30 * 30) + '%', mstAtk30 + '次 ×30%', 'mastery');
     atkOutGroup1Items.push(item30);
     atkGroup1Items.push(item30);
   }
-  // EX 特殊节点（攻击力+20%/伤害上限+50% 带自身弱化）— 局外和局内都计入，不占 20% 上限
+  // EX 特殊節點（攻擊力+20%/傷害上限+50% 带自身弱化）— 局外和局内都計入，不占 20% 上限
   if (mtAtkPctOut > 0) {
     atkOutGroup1Pct += mtAtkPctOut;
     atkInGroup1Pct += mtAtkPctOut;
-    var itemEx = src('EX专精 攻击力+20%（弱化）', '+' + mtAtkPctOut + '%', '攻击力+20%/伤害上限+50% 自身弱化', 'mastery');
+    var itemEx = src('EX戰技 攻擊力+20%（弱化）', '+' + mtAtkPctOut + '%', '攻擊力+20%/傷害上限+50% 自身弱化', 'mastery');
     atkOutGroup1Items.push(itemEx);
     atkGroup1Items.push(itemEx);
   }
-  // 专精树其他攻击力节点 — 仅计入局内
+  // 戰技樹其他攻擊力節點 — 僅計入局内
   if (mtAtkPct > 0) {
     atkInGroup1Pct += mtAtkPct;
-    atkGroup1Items.push(src('专精树 攻击力', '+' + mtAtkPct + '%', '专精树节点加成', 'mastery'));
+    atkGroup1Items.push(src('戰技樹 攻擊力', '+' + mtAtkPct + '%', '戰技樹節點加成', 'mastery'));
   }
-  // 因子联动 — 局外和局内都计入
+  // 因子聯動 — 局外和局内都計入
   if (synAtkBonus > 0 && synCnt.attack > 0) {
     atkOutGroup1Pct += synAtkBonus;
     atkInGroup1Pct += synAtkBonus;
-    var itemSyn = src('因子联动: 攻击类因子1 ×' + synCnt.attack, '+' + synAtkBonus + '%', '每因子+' + (mstSynAtk * 10) + '% (专精' + mstSynAtk + '次)', 'synergy');
+    var itemSyn = src('因子聯動: 攻擊類因子1 ×' + synCnt.attack, '+' + synAtkBonus + '%', '每因子+' + (mstSynAtk * 10) + '% (戰技' + mstSynAtk + '次)', 'synergy');
     atkOutGroup1Items.push(itemSyn);
     atkGroup1Items.push(itemSyn);
   }
   var atkOutGroup1Multiplier = 1 + atkOutGroup1Pct / 100;
   var atkInGroup1Multiplier = 1 + atkInGroup1Pct / 100;
 
-  // 局内组2: 全部因子百分比（乘算）— 包含所有含攻击力加成的因子
+  // 局内组2: 全部因子百分比（乘算）— 包含所有含攻擊力加成的因子
   var atkInGroup2Multiplier = 1;
   var atkInGroup2Items = [];
   function addInG2(name, pct, note, cls) { atkInGroup2Multiplier *= (1 + pct / 100); atkInGroup2Items.push(src(name, '+' + pct + '%', note, cls)); }
   if (lv('天星之煌') > 0) { var v = lookupLevel(lv('天星之煌'), STAR_BLAZE_TABLE); addInG2('天星之煌', v, 'Lv.' + lv('天星之煌'), 'pct'); }
-  if (lv('浪迹天涯') > 0) { var v = lookupLevel(lv('浪迹天涯'), WANDERER_TABLE); addInG2('浪迹天涯', v, 'Lv.' + lv('浪迹天涯'), 'pct'); }
-  if (lv('奋不顾身') > 0) { var v = lookupLevel(lv('奋不顾身'), RUSH_TABLE); addInG2('奋不顾身', v, 'Lv.' + lv('奋不顾身'), 'pct'); }
+  if (lv('天上無敵') > 0) { var v = lookupLevel(lv('天上無敵'), WANDERER_TABLE); addInG2('天上無敵', v, 'Lv.' + lv('天上無敵'), 'pct'); }
+  if (lv('捨身') > 0) { var v = lookupLevel(lv('捨身'), RUSH_TABLE); addInG2('捨身', v, 'Lv.' + lv('捨身'), 'pct'); }
   if (lv('暴君') > 0) { var v = lookupLevel(lv('暴君'), TYRANT_TABLE); addInG2('暴君', v, 'Lv.' + lv('暴君'), 'pct'); }
-  if (lv('修罗') > 0) { var v = lookupLevel(lv('修罗'), ASURA_TABLE); addInG2('修罗', v, 'Lv.' + lv('修罗'), 'pct'); }
-  if (lv('刀上舞') > 0) { var v = lookupLevel(lv('刀上舞'), BLADE_DANCE_TABLE); addInG2('刀上舞', v, 'Lv.' + lv('刀上舞'), 'pct'); }
-  if (lv('穷寇心') > 0) { var v = lookupLevel(lv('穷寇心'), DESPERATE_TABLE); addInG2('穷寇心', v, 'Lv.' + lv('穷寇心'), 'pct'); }
-  if (havocActive) { addInG2('浩劫新星', havocAtk, 'HP≤' + havocHp.toLocaleString('en-US') + '触发 (Lv.' + havocLv + ')', 'pct'); }
-  // 从 DETAIL_DATA 读取的攻击力因子
-  var dataAtkFactors = ['超新星', '伤害上限轰天', '伤害上限红天', '伤害上限苍天', '伤害上限疾天'];
+  if (lv('修羅') > 0) { var v = lookupLevel(lv('修羅'), ASURA_TABLE); addInG2('修羅', v, 'Lv.' + lv('修羅'), 'pct'); }
+  if (lv('一線之隔') > 0) { var v = lookupLevel(lv('一線之隔'), BLADE_DANCE_TABLE); addInG2('一線之隔', v, 'Lv.' + lv('一線之隔'), 'pct'); }
+  if (lv('窮鼠') > 0) { var v = lookupLevel(lv('窮鼠'), DESPERATE_TABLE); addInG2('窮鼠', v, 'Lv.' + lv('窮鼠'), 'pct'); }
+  if (havocActive) { addInG2('浩劫新星', havocAtk, 'HP≤' + havocHp.toLocaleString('en-US') + '觸發 (Lv.' + havocLv + ')', 'pct'); }
+  // 從 DETAIL_DATA 讀取的攻擊力因子
+  var dataAtkFactors = ['超新星', '傷害上限轟天', '傷害上限红天', '傷害上限蒼天', '傷害上限疾天'];
   dataAtkFactors.forEach(function(f) { var a = getEffAtk(f); if (a > 0) addInG2(f, a, 'Lv.' + lv(f), 'pct'); });
 
-  // 局外组2: 仅限局外因子（暴君、奋不顾身、刀上舞、穷寇心、伤害上限轰天、伤害上限苍天、浩劫新星、超新星）
+  // 局外组2: 僅限局外因子（暴君、捨身、一線之隔、窮鼠、傷害上限轟天、傷害上限蒼天、浩劫新星、超新星）
   var atkOutGroup2Multiplier = 1;
   var atkOutGroup2Items = [];
-  var outAtkFactorNames = ['暴君', '奋不顾身', '刀上舞', '穷寇心', '伤害上限轰天', '伤害上限苍天', '浩劫新星', '超新星'];
+  var outAtkFactorNames = ['暴君', '捨身', '一線之隔', '窮鼠', '傷害上限轟天', '傷害上限蒼天', '浩劫新星', '超新星'];
   atkInGroup2Items.forEach(function(item) {
     if (outAtkFactorNames.indexOf(item.name) === -1) return;
     atkOutGroup2Multiplier *= (1 + parseFloat(String(item.value).replace('+', '').replace('%', '')) / 100);
@@ -5127,34 +5127,34 @@ function calculateCharacterStats() {
   var atkOutOfCombat = Math.round((base.atk + atkFlat) * atkOutGroup1Multiplier * atkOutGroup2Multiplier);
 
   // --- CRIT ---
-  // 上限突破 暴击率
+  // 上限突破 爆擊機率
   var lbCrit = 0;
   if (state.limitBreak) {
     state.limitBreak.forEach(function(entry) {
-      if (entry[0] === '暴击率') lbCrit += parseFloat(entry[2]) || 0;
+      if (entry[0] === '爆擊機率') lbCrit += parseFloat(entry[2]) || 0;
     });
   }
-  var critFlat = lookupLevel(lv('暴击率'), CRIT_TABLE) + mtCrit + lbCrit;
+  var critFlat = lookupLevel(lv('爆擊機率'), CRIT_TABLE) + mtCrit + lbCrit;
   var brkCRIT = [];
-  brkCRIT.push(src('武器「' + state.weapon + '」基础暴击率', base.crit + '%', '', 'base'));
-  if (lv('暴击率') > 0) brkCRIT.push(src('暴击率' + fmtLv('暴击率'), '+' + lookupLevel(lv('暴击率'), CRIT_TABLE).toFixed(1) + '%', '', 'flat'));
-  if (mtCrit > 0) brkCRIT.push(src('专精树 暴击率', '+' + mtCrit + '%', '', 'mastery'));
-  if (lbCrit > 0) brkCRIT.push(src('上限突破 暴击率', '+' + lbCrit + '%', '', 'mastery'));
+  brkCRIT.push(src('武器「' + state.weapon + '」基礎爆擊機率', base.crit + '%', '', 'base'));
+  if (lv('爆擊機率') > 0) brkCRIT.push(src('爆擊機率' + fmtLv('爆擊機率'), '+' + lookupLevel(lv('爆擊機率'), CRIT_TABLE).toFixed(1) + '%', '', 'flat'));
+  if (mtCrit > 0) brkCRIT.push(src('戰技樹 爆擊機率', '+' + mtCrit + '%', '', 'mastery'));
+  if (lbCrit > 0) brkCRIT.push(src('上限突破 爆擊機率', '+' + lbCrit + '%', '', 'mastery'));
   var crit = Math.round(base.crit + critFlat);
 
   // --- STUN ---
-  // 上限突破 昏厥值
+  // 上限突破 暈眩值
   var lbStun = 0;
   if (state.limitBreak) {
     state.limitBreak.forEach(function(entry) {
-      if (entry[0] === '昏厥值') lbStun += parseFloat(entry[2]) || 0;
+      if (entry[0] === '暈眩值') lbStun += parseFloat(entry[2]) || 0;
     });
   }
-  var stunFlat = lookupLevel(lv('昏厥'), STUN_TABLE);
+  var stunFlat = lookupLevel(lv('暈眩'), STUN_TABLE);
   var brkSTUN = [];
-  brkSTUN.push(src('武器「' + state.weapon + '」基础昏厥值', base.stun.toString(), '', 'base'));
-  if (lv('昏厥') > 0) brkSTUN.push(src('昏厥' + fmtLv('昏厥'), '+' + Math.round(stunFlat), '', 'flat'));
-  if (lbStun > 0) brkSTUN.push(src('上限突破 昏厥值', '+' + Math.round(lbStun), '', 'mastery'));
+  brkSTUN.push(src('武器「' + state.weapon + '」基礎暈眩值', base.stun.toString(), '', 'base'));
+  if (lv('暈眩') > 0) brkSTUN.push(src('暈眩' + fmtLv('暈眩'), '+' + Math.round(stunFlat), '', 'flat'));
+  if (lbStun > 0) brkSTUN.push(src('上限突破 暈眩值', '+' + Math.round(lbStun), '', 'mastery'));
   var stun = Math.round(base.stun + stunFlat + lbStun);
 
   // --- DAMAGE CAP ---
@@ -5165,18 +5165,18 @@ function calculateCharacterStats() {
     if (l > 0) { totalCapLv += l; }
   });
   var effectiveCapLv = Math.min(totalCapLv, (typeof CAP_TABLE !== 'undefined') ? CAP_TABLE.length : 65);
-  if (totalCapLv > 0) { capLvItems.push(src('伤害上限', 'Lv.' + effectiveCapLv + ' (累计)' + (totalCapLv > effectiveCapLv ? ' / 实际' + totalCapLv : ''), '', 'flat')); }
-  if (capLvItems.length === 0) capLvItems.push(src('无伤害上限因子', '0', '', 'flat'));
+  if (totalCapLv > 0) { capLvItems.push(src('傷害上限', 'Lv.' + effectiveCapLv + ' (累計)' + (totalCapLv > effectiveCapLv ? ' / 實際' + totalCapLv : ''), '', 'flat')); }
+  if (capLvItems.length === 0) capLvItems.push(src('無傷害上限因子', '0', '', 'flat'));
   var capFromLevel = (typeof lookupLevel === 'function' && typeof CAP_TABLE !== 'undefined') ? lookupLevel(effectiveCapLv, CAP_TABLE) : 0;
   var capSpecialTotal = 0;
   var capSpecialItems = [];
   if (has('天星之煌')) { capSpecialTotal += 70; capSpecialItems.push(src('天星之煌', '+70%', '固定值', 'pct')); }
   if (has('天星之界')) { capSpecialTotal += 70; capSpecialItems.push(src('天星之界', '+70%', '固定值', 'pct')); }
-  if (has('浪迹天涯')) { capSpecialTotal += 50; capSpecialItems.push(src('浪迹天涯', '+50%', '固定值', 'pct')); }
-  if (has('刀上舞')) { capSpecialTotal += 30; capSpecialItems.push(src('刀上舞', '+30%', '固定值', 'pct')); }
-  if (havocActive) { capSpecialTotal += havocCap; capSpecialItems.push(src('浩劫新星', '+' + havocCap + '%', 'HP≤' + havocHp.toLocaleString('en-US') + '触发 (Lv.' + havocLv + ')', 'pct')); }
-  // 从 DETAIL_DATA 读取伤害上限的因子
-  var dataCapFactors = ['超新星', '伤害上限轰天', '伤害上限红天', '伤害上限苍天', '伤害上限疾天'];
+  if (has('天上無敵')) { capSpecialTotal += 50; capSpecialItems.push(src('天上無敵', '+50%', '固定值', 'pct')); }
+  if (has('一線之隔')) { capSpecialTotal += 30; capSpecialItems.push(src('一線之隔', '+30%', '固定值', 'pct')); }
+  if (havocActive) { capSpecialTotal += havocCap; capSpecialItems.push(src('浩劫新星', '+' + havocCap + '%', 'HP≤' + havocHp.toLocaleString('en-US') + '觸發 (Lv.' + havocLv + ')', 'pct')); }
+  // 從 DETAIL_DATA 讀取傷害上限的因子
+  var dataCapFactors = ['超新星', '傷害上限轟天', '傷害上限红天', '傷害上限蒼天', '傷害上限疾天'];
   dataCapFactors.forEach(function(f) { var c = getEffCap(f); if (c > 0) { capSpecialTotal += c; capSpecialItems.push(src(f, '+' + c + '%', 'Lv.' + lv(f), 'pct')); } });
   // 超凡破限：查表
   var cfpxLv = lv('超凡破限');
@@ -5185,25 +5185,25 @@ function calculateCharacterStats() {
     var cfpxCap = lookupLevel(cfpxEffective, CFPX_TABLE);
     if (cfpxCap > 0) { capSpecialTotal += cfpxCap; capSpecialItems.push(src('超凡破限', '+' + cfpxCap + '%', 'Lv.' + cfpxLv + ' → ' + cfpxCap + '%', 'pct')); }
   }
-  if (mtCap > 0) { capSpecialTotal += mtCap; capSpecialItems.push(src('专精树 伤害上限', '+' + mtCap + '%', '专精树节点加成', 'mastery')); }
-  if (mtCondCaps > 0) { capSpecialTotal += mtCondCaps; capSpecialItems.push(src('专精树 条件伤害上限', '+' + mtCondCaps + '%', '异常/弱体时触发', 'mastery')); }
+  if (mtCap > 0) { capSpecialTotal += mtCap; capSpecialItems.push(src('戰技樹 傷害上限', '+' + mtCap + '%', '戰技樹節點加成', 'mastery')); }
+  if (mtCondCaps > 0) { capSpecialTotal += mtCondCaps; capSpecialItems.push(src('戰技樹 條件傷害上限', '+' + mtCondCaps + '%', '异常/弱體時觸發', 'mastery')); }
   var capSynergyItems = [];
   if (synCapBonus > 0 && synCnt.basic > 0) {
-    capSynergyItems.push(src('因子联动: 基础能力因子1 ×' + synCnt.basic, '+' + synCapBonus + '%', '每因子+' + (mstSynBasic * 20) + '% (专精' + mstSynBasic + '次)', 'synergy'));
+    capSynergyItems.push(src('因子聯動: 基礎能力因子1 ×' + synCnt.basic, '+' + synCapBonus + '%', '每因子+' + (mstSynBasic * 20) + '% (戰技' + mstSynBasic + '次)', 'synergy'));
   }
   var cap = Math.round(capFromLevel + capSpecialTotal + synCapBonus);
 
-  // --- DAMAGE REDUCTION (承伤率) ---
-  // 刚健数值从 FACTOR_EFFECT_DATA 动态读取，不再使用硬编码 lookup table
-  // 坚守 lookup table (HP 1%)
+  // --- DAMAGE REDUCTION (承傷率) ---
+  // 剛健數值從 FACTOR_EFFECT_DATA 動态讀取，不再使用硬编碼 lookup table
+  // 堅守 lookup table (HP 1%)
   var KENSHU_HP1 = [4,7,11,14,17,19,21,23,25,27,28,30,32,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,63,65,67,70];
 
-  // ---- 通用加算区 C = P + 0.06*N + T + Q ----
+  // ---- 通用加算區 C = P + 0.06*N + T + Q ----
   var defP = (mtDefPct || 0) / 100;
-  // N: 防御与支援联动（防御%）专精×防御类因子数×6%防御（专精0次时N=0，上限5个因子）
+  // N: 防禦與支援聯動（防禦%）戰技×防禦類因子數×6%防禦（戰技0次時N=0，上限5個因子）
   var defN = Math.min(synCnt.defense, 5) * mstSynDef2 * 0.06;
-  var hasHagane = has('霸体');
-  var hasKenji = has('坚持');
+  var hasHagane = has('畏怯無效');
+  var hasKenji = has('奮勇');
   var defT = (hasHagane && hasKenji) ? 0.15 : 0;
   var defQ = 0;
   if (has('蓄力强化')) {
@@ -5211,24 +5211,24 @@ function calculateCharacterStats() {
     if (chikaraLv > 15) chikaraLv = 15;
     defQ = interpLevel(chikaraLv, 1, 6, 15, 20) / 100;
   }
-  var defW = has('浪迹天涯') ? 0.05 : 0;
+  var defW = has('天上無敵') ? 0.05 : 0;
   var C = defP + defN + defT + defQ + defW;
   if (C > 1) C = 1;
 
-  // ---- 霸体乘区 B ----
+  // ---- 畏怯無效乘區 B ----
   var B = hasHagane ? 0.30 : 0;
 
-  // ---- 白盾乘区 D（钳蟹的报恩，独立乘区）----
-  var hasKani = has('钳蟹的报恩');
+  // ---- 白盾乘區 D（蟹之報恩，獨立乘區）----
+  var hasKani = has('蟹之報恩');
   var D = hasKani ? 0.10 : 0;
 
-  // ---- 刚健乘区 G(h) ----
-  var kengouLv = has('刚健') ? lv('刚健') : 0;
-  var kenshuLv = has('坚守') ? lv('坚守') : 0;
+  // ---- 剛健乘區 G(h) ----
+  var kengouLv = has('剛健') ? lv('剛健') : 0;
+  var kenshuLv = has('堅守') ? lv('堅守') : 0;
 
   function calcGengouH(h, kgLv) {
     if (kgLv <= 0) return 0;
-    var kd = FACTOR_EFFECT_DATA['刚健'];
+    var kd = FACTOR_EFFECT_DATA['剛健'];
     if (!kd) return 0;
     var keys = Object.keys(kd).map(Number).filter(function(k) { return k > 0; });
     if (keys.length === 0) return 0;
@@ -5273,7 +5273,7 @@ function calculateCharacterStats() {
     atk: { final: atkOutOfCombat, inCombat: atkInCombat, detail: (atkFlat > 0 ? '+固定' + Math.round(atkFlat) : '') + (atkOutGroup1Pct > 0 ? ' ×(1+' + atkOutGroup1Pct + '%)' : '') + (atkOutGroup2Multiplier !== 1 ? ' ×' + atkOutGroup2Multiplier.toFixed(2) : ''), breakdown: { base: base.atk, flat: atkFlat, flatItems: brkATK.filter(function(x){return x.cls!=='base';}), baseItem: brkATK[0], group1Items: atkGroup1Items, group1Pct: atkInGroup1Pct, group1Multiplier: atkInGroup1Multiplier, outGroup1Items: atkOutGroup1Items, outGroup1Pct: atkOutGroup1Pct, outGroup1Multiplier: atkOutGroup1Multiplier, group2Items: atkOutGroup2Items, group2Multiplier: atkOutGroup2Multiplier, inGroup2Items: atkInGroup2Items, inGroup2Multiplier: atkInGroup2Multiplier } },
     crit: { final: crit, detail: critFlat > 0 ? '+' + critFlat.toFixed(1) + '%' : '', breakdown: { base: base.crit, flat: critFlat, baseItem: brkCRIT[0], flatItems: brkCRIT.filter(function(x){return x.cls!=='base';}), items: brkCRIT } },
     stun: { final: stun, detail: stunFlat > 0 ? '+' + Math.round(stunFlat) : '', breakdown: { base: base.stun, flat: stunFlat, baseItem: brkSTUN[0], flatItems: brkSTUN.filter(function(x){return x.cls!=='base';}), items: brkSTUN } },
-    cap:  { final: cap,  detail: '(' + totalCapLv + '级' + (capSpecialTotal > 0 ? ' +' + capSpecialTotal + '%' : '') + (synCapBonus > 0 ? ' +联动' + synCapBonus + '%' : '') + ')', breakdown: { totalLv: totalCapLv, effectiveLv: effectiveCapLv, lvItems: capLvItems, fromLevel: capFromLevel, specialTotal: capSpecialTotal, specialItems: capSpecialItems, synergyBonus: synCapBonus, synergyItems: capSynergyItems } },
+    cap:  { final: cap,  detail: '(' + totalCapLv + '級' + (capSpecialTotal > 0 ? ' +' + capSpecialTotal + '%' : '') + (synCapBonus > 0 ? ' +聯動' + synCapBonus + '%' : '') + ')', breakdown: { totalLv: totalCapLv, effectiveLv: effectiveCapLv, lvItems: capLvItems, fromLevel: capFromLevel, specialTotal: capSpecialTotal, specialItems: capSpecialItems, synergyBonus: synCapBonus, synergyItems: capSynergyItems } },
     dr:   { final: drBasePct, detail: '', breakdown: { baseR: drBaseR, defP: defP, defN: defN, defT: defT, defQ: defQ, defW: defW, C: C, B: B, D: D, hasHagane: hasHagane, hasKenji: hasKenji, hasKani: hasKani, kengouLv: kengouLv, kenshuLv: kenshuLv, G_full: G_full, G_half: G_half, G_low: G_low, S_full: S_full, S_half: S_half, S_low: S_low, R_full: R_full, R_half: R_half, R_low: R_low, drBasePct: drBasePct } }
   };
 }
@@ -5284,11 +5284,11 @@ function renderCharacterStats() {
   var html = '';
   html += '<div class="char-stats-grid">';
   html += '<div class="char-stat"><span class="cs-name">❤️ HP</span><span class="cs-value" data-stat="hp">' + fmt(cs.hp.final) + '</span></div>';
-  html += '<div class="char-stat"><span class="cs-name">⚔️ 攻击力</span><span class="cs-value" data-stat="atk">' + fmt(cs.atk.final) + '</span></div>';
-  html += '<div class="char-stat"><span class="cs-name">💥 暴击率</span><span class="cs-value" data-stat="crit">' + cs.crit.final + '%</span></div>';
-  html += '<div class="char-stat"><span class="cs-name">🔨 昏厥值</span><span class="cs-value" data-stat="stun">' + cs.stun.final + '</span></div>';
-  html += '<div class="char-stat"><span class="cs-name">🛡️ 减伤率</span><span class="cs-value" data-stat="dr">' + cs.dr.final + '%</span></div>';
-  html += '<div class="char-stat full"><span class="cs-name">⬆️ 伤害上限</span><span class="cs-value" data-stat="cap">+' + cs.cap.final + '%</span></div>';
+  html += '<div class="char-stat"><span class="cs-name">⚔️ 攻擊力</span><span class="cs-value" data-stat="atk">' + fmt(cs.atk.final) + '</span></div>';
+  html += '<div class="char-stat"><span class="cs-name">💥 爆擊機率</span><span class="cs-value" data-stat="crit">' + cs.crit.final + '%</span></div>';
+  html += '<div class="char-stat"><span class="cs-name">🔨 暈眩值</span><span class="cs-value" data-stat="stun">' + cs.stun.final + '</span></div>';
+  html += '<div class="char-stat"><span class="cs-name">🛡️ 减傷率</span><span class="cs-value" data-stat="dr">' + cs.dr.final + '%</span></div>';
+  html += '<div class="char-stat full"><span class="cs-name">⬆️ 傷害上限</span><span class="cs-value" data-stat="cap">+' + cs.cap.final + '%</span></div>';
   html += '</div>';
   document.getElementById('characterStats').innerHTML = html;
 }
@@ -5300,12 +5300,12 @@ function openStatDetail(stat) {
   var brk = data.breakdown;
   var icon, title;
   switch (stat) {
-    case 'hp':   icon = '❤️'; title = 'HP 计算详情'; break;
-    case 'atk':  icon = '⚔️'; title = '攻击力 计算详情'; break;
-    case 'crit': icon = '💥'; title = '暴击率 计算详情'; break;
-    case 'stun': icon = '🔨'; title = '昏厥值 计算详情'; break;
-    case 'cap':  icon = '⬆️'; title = '伤害上限 计算详情'; break;
-    case 'dr':   icon = '🛡️'; title = '减伤率 计算详情'; break;
+    case 'hp':   icon = '❤️'; title = 'HP 計算詳情'; break;
+    case 'atk':  icon = '⚔️'; title = '攻擊力 計算詳情'; break;
+    case 'crit': icon = '💥'; title = '爆擊機率 計算詳情'; break;
+    case 'stun': icon = '🔨'; title = '暈眩值 計算詳情'; break;
+    case 'cap':  icon = '⬆️'; title = '傷害上限 計算詳情'; break;
+    case 'dr':   icon = '🛡️'; title = '减傷率 計算詳情'; break;
   }
   document.getElementById('sdIcon').textContent = icon;
   document.getElementById('sdTitle').textContent = title;
@@ -5318,24 +5318,24 @@ function openStatDetail(stat) {
 
   if (stat === 'cap') {
     // CAP has a different structure
-    body += '<div class="sd-section-label">伤害上限因子等级</div>';
+    body += '<div class="sd-section-label">傷害上限因子等級</div>';
     body += '<div class="sd-source-list">';
     brk.lvItems.forEach(function(s) { body += srcRow(s); });
     body += '</div>';
-    body += '<div class="sd-formula">因子总等级 <strong>' + (brk.totalLv === brk.effectiveLv ? brk.totalLv : (brk.effectiveLv + ' (上限)')) + '</strong> 级 → 伤害上限换算 <strong>+' + brk.fromLevel + '%</strong></div>';
+    body += '<div class="sd-formula">因子總等級 <strong>' + (brk.totalLv === brk.effectiveLv ? brk.totalLv : (brk.effectiveLv + ' (上限)')) + '</strong> 級 → 傷害上限换算 <strong>+' + brk.fromLevel + '%</strong></div>';
     if (brk.specialTotal > 0) {
       body += '<div class="sd-section-label">特殊加成来源</div>';
       body += '<div class="sd-source-list">';
       brk.specialItems.forEach(function(s) { body += srcRow(s); });
       body += '</div>';
-      body += '<div class="sd-formula">特殊加成合计 <strong>+' + brk.specialTotal + '%</strong></div>';
+      body += '<div class="sd-formula">特殊加成合計 <strong>+' + brk.specialTotal + '%</strong></div>';
     }
     if (brk.synergyBonus > 0 && brk.synergyItems && brk.synergyItems.length > 0) {
-      body += '<div class="sd-section-label">🔗 因子联动加成（基础能力因子1）</div>';
+      body += '<div class="sd-section-label">🔗 因子聯動加成（基礎能力因子1）</div>';
       body += '<div class="sd-source-list">';
       brk.synergyItems.forEach(function(s) { body += srcRow(s); });
       body += '</div>';
-      body += '<div class="sd-formula">联动合计 <strong>+' + brk.synergyBonus + '%</strong></div>';
+      body += '<div class="sd-formula">聯動合計 <strong>+' + brk.synergyBonus + '%</strong></div>';
     }
     body += '<div class="sd-divider"><span>最终结果</span></div>';
     var capSumParts = [brk.fromLevel + '%'];
@@ -5343,14 +5343,14 @@ function openStatDetail(stat) {
     if (brk.synergyBonus > 0) capSumParts.push(' + ' + brk.synergyBonus + '%');
     body += '<div class="sd-formula">' + capSumParts.join('') + ' = <strong>+' + data.final + '%</strong></div>';
   } else if (stat === 'dr') {
-    // ---- 承伤率详情 ----
-    body += '<div class="sd-section-label">通用加算区 C = P + 0.06×N + T + Q + W</div>';
+    // ---- 承傷率詳情 ----
+    body += '<div class="sd-section-label">通用加算區 C = P + 0.06×N + T + Q + W</div>';
     body += '<div class="sd-source-list">';
-    body += srcRow({name:'P: 专精防御', value:'+' + (brk.defP * 100).toFixed(0) + '%', extra:'专精树防御%总和', cls:'mastery'});
-    if (brk.defN > 0) body += srcRow({name:'N: 防御类因子×' + (brk.defN / 0.06).toFixed(0), value:'+' + (brk.defN * 100).toFixed(0) + '%', extra:'专精「防御+6%」每因子+6%防御 (上限5个)', cls:'synergy'});
-    if (brk.defT > 0) body += srcRow({name:'T: 霸体+坚持', value:'+15%', extra:'两因子同时装备时触发', cls:'pct'});
+    body += srcRow({name:'P: 戰技防禦', value:'+' + (brk.defP * 100).toFixed(0) + '%', extra:'戰技樹防禦%總和', cls:'mastery'});
+    if (brk.defN > 0) body += srcRow({name:'N: 防禦類因子×' + (brk.defN / 0.06).toFixed(0), value:'+' + (brk.defN * 100).toFixed(0) + '%', extra:'戰技「防禦+6%」每因子+6%防禦 (上限5個)', cls:'synergy'});
+    if (brk.defT > 0) body += srcRow({name:'T: 畏怯無效+奮勇', value:'+15%', extra:'兩因子同時裝備時觸發', cls:'pct'});
     if (brk.defQ > 0) body += srcRow({name:'Q: 蓄力强化', value:'+' + (brk.defQ * 100).toFixed(1) + '%', extra:'Lv.1→6% / Lv.15→20%', cls:'flat'});
-    if (brk.defW > 0) body += srcRow({name:'W: 浪迹天涯', value:'+5%', extra:'挑战C++难度时触发', cls:'flat'});
+    if (brk.defW > 0) body += srcRow({name:'W: 天上無敵', value:'+5%', extra:'挑戰C++難度時觸發', cls:'flat'});
     body += '</div>';
     body += '<div class="sd-formula">C = ' + (brk.defP * 100).toFixed(0) + '%';
     if (brk.defN > 0) body += ' + ' + (brk.defN * 100).toFixed(0) + '%';
@@ -5359,62 +5359,62 @@ function openStatDetail(stat) {
     if (brk.defW > 0) body += ' + 5%';
     body += ' = <strong>' + (brk.C * 100).toFixed(1) + '%</strong></div>';
 
-    body += '<div class="sd-section-label">霸体乘区 B</div>';
+    body += '<div class="sd-section-label">畏怯無效乘區 B</div>';
     if (brk.hasHagane) {
       body += '<div class="sd-source-list">';
-      body += srcRow({name:'霸体', value:'+30%防御', extra:'与通用加算区独立相乘', cls:'flat'});
+      body += srcRow({name:'畏怯無效', value:'+30%防禦', extra:'與通用加算區獨立相乘', cls:'flat'});
       body += '</div>';
       body += '<div class="sd-formula">B = <strong>30%</strong></div>';
     } else {
-      body += '<div class="sd-formula">未装备霸体，B = <strong>0%</strong></div>';
+      body += '<div class="sd-formula">未裝備畏怯無效，B = <strong>0%</strong></div>';
     }
 
-    body += '<div class="sd-section-label">白盾乘区 D（钳蟹的报恩）</div>';
+    body += '<div class="sd-section-label">白盾乘區 D（蟹之報恩）</div>';
     if (brk.hasKani) {
       body += '<div class="sd-source-list">';
-      body += srcRow({name:'钳蟹的报恩', value:'+10%', extra:'赋予自身，与C/B/G/S都独立相乘', cls:'flat'});
+      body += srcRow({name:'蟹之報恩', value:'+10%', extra:'赋予自身，與C/B/G/S都獨立相乘', cls:'flat'});
       body += '</div>';
       body += '<div class="sd-formula">D = <strong>10%</strong></div>';
     } else {
-      body += '<div class="sd-formula">未装备钳蟹的报恩，D = <strong>0%</strong></div>';
+      body += '<div class="sd-formula">未裝備蟹之報恩，D = <strong>0%</strong></div>';
     }
 
-    body += '<div class="sd-section-label">刚健乘区 G(h)</div>';
+    body += '<div class="sd-section-label">剛健乘區 G(h)</div>';
     if (brk.kengouLv > 0) {
       body += '<div class="sd-source-list">';
-      body += srcRow({name:'刚健 Lv.' + brk.kengouLv, value:'', extra:'HP越多防御越高', cls:'flat'});
+      body += srcRow({name:'剛健 Lv.' + brk.kengouLv, value:'', extra:'HP越多防禦越高', cls:'flat'});
       body += '</div>';
-      body += '<div class="sd-formula">满血 G(100%) = <strong>' + (brk.G_full * 100).toFixed(1) + '%</strong></div>';
+      body += '<div class="sd-formula">滿血 G(100%) = <strong>' + (brk.G_full * 100).toFixed(1) + '%</strong></div>';
       body += '<div class="sd-formula">半血 G(50%) = <strong>' + (brk.G_half * 100).toFixed(1) + '%</strong></div>';
-      body += '<div class="sd-formula">残血 G(25%) = <strong>' + (brk.G_low * 100).toFixed(1) + '%</strong></div>';
-      body += '<div class="sd-formula">拟合: G(h) ≈ ' + (brk.G_full * 100).toFixed(1) + '% × h²</div>';
+      body += '<div class="sd-formula">殘血 G(25%) = <strong>' + (brk.G_low * 100).toFixed(1) + '%</strong></div>';
+      body += '<div class="sd-formula">擬合: G(h) ≈ ' + (brk.G_full * 100).toFixed(1) + '% × h²</div>';
     } else {
-      body += '<div class="sd-formula">未装备刚健，G = <strong>0%</strong></div>';
+      body += '<div class="sd-formula">未裝備剛健，G = <strong>0%</strong></div>';
     }
 
-    body += '<div class="sd-section-label">坚守乘区 S(h)</div>';
+    body += '<div class="sd-section-label">堅守乘區 S(h)</div>';
     if (brk.kenshuLv > 0) {
       body += '<div class="sd-source-list">';
-      body += srcRow({name:'坚守 Lv.' + brk.kenshuLv, value:'', extra:'HP越少防御越高', cls:'flat'});
+      body += srcRow({name:'堅守 Lv.' + brk.kenshuLv, value:'', extra:'HP越少防禦越高', cls:'flat'});
       body += '</div>';
-      body += '<div class="sd-formula">满血 S(100%) = <strong>' + (brk.S_full * 100).toFixed(1) + '%</strong></div>';
+      body += '<div class="sd-formula">滿血 S(100%) = <strong>' + (brk.S_full * 100).toFixed(1) + '%</strong></div>';
       body += '<div class="sd-formula">半血 S(50%) = <strong>' + (brk.S_half * 100).toFixed(1) + '%</strong></div>';
-      body += '<div class="sd-formula">残血 S(25%) = <strong>' + (brk.S_low * 100).toFixed(1) + '%</strong></div>';
+      body += '<div class="sd-formula">殘血 S(25%) = <strong>' + (brk.S_low * 100).toFixed(1) + '%</strong></div>';
       body += '<div class="sd-formula">S(h) = ' + (brk.S_low * 100 * 4).toFixed(1) + '% × (1 − h)</div>';
     } else {
-      body += '<div class="sd-formula">未装备坚守，S = <strong>0%</strong></div>';
+      body += '<div class="sd-formula">未裝備堅守，S = <strong>0%</strong></div>';
     }
 
-    body += '<div class="sd-divider"><span>减伤率 R = 1−(1−C)(1−B)(1−白盾)(1−G)(1−S)</span></div>';
-    body += '<div class="sd-formula">满血: 1−(1−' + (brk.C * 100).toFixed(1) + '%)(1−' + (brk.B * 100).toFixed(0) + '%)(1−' + (brk.D * 100).toFixed(0) + '%)(1−' + (brk.G_full * 100).toFixed(1) + '%)(1−' + (brk.S_full * 100).toFixed(1) + '%)</div>';
-    body += '<div class="sd-final"><span class="sd-final-label">满血减伤率</span><span class="sd-final-value">' + (brk.R_full * 100).toFixed(1) + '%</span></div>';
+    body += '<div class="sd-divider"><span>减傷率 R = 1−(1−C)(1−B)(1−白盾)(1−G)(1−S)</span></div>';
+    body += '<div class="sd-formula">滿血: 1−(1−' + (brk.C * 100).toFixed(1) + '%)(1−' + (brk.B * 100).toFixed(0) + '%)(1−' + (brk.D * 100).toFixed(0) + '%)(1−' + (brk.G_full * 100).toFixed(1) + '%)(1−' + (brk.S_full * 100).toFixed(1) + '%)</div>';
+    body += '<div class="sd-final"><span class="sd-final-label">滿血减傷率</span><span class="sd-final-value">' + (brk.R_full * 100).toFixed(1) + '%</span></div>';
     body += '<div class="sd-formula">半血: 1−(1−' + (brk.C * 100).toFixed(1) + '%)(1−' + (brk.B * 100).toFixed(0) + '%)(1−' + (brk.D * 100).toFixed(0) + '%)(1−' + (brk.G_half * 100).toFixed(1) + '%)(1−' + (brk.S_half * 100).toFixed(1) + '%)</div>';
-    body += '<div class="sd-final"><span class="sd-final-label">半血减伤率</span><span class="sd-final-value">' + (brk.R_half * 100).toFixed(1) + '%</span></div>';
-    body += '<div class="sd-formula">残血(25%): 1−(1−' + (brk.C * 100).toFixed(1) + '%)(1−' + (brk.B * 100).toFixed(0) + '%)(1−' + (brk.D * 100).toFixed(0) + '%)(1−' + (brk.G_low * 100).toFixed(1) + '%)(1−' + (brk.S_low * 100).toFixed(1) + '%)</div>';
-    body += '<div class="sd-final"><span class="sd-final-label">残血减伤率</span><span class="sd-final-value">' + (brk.R_low * 100).toFixed(1) + '%</span></div>';
+    body += '<div class="sd-final"><span class="sd-final-label">半血减傷率</span><span class="sd-final-value">' + (brk.R_half * 100).toFixed(1) + '%</span></div>';
+    body += '<div class="sd-formula">殘血(25%): 1−(1−' + (brk.C * 100).toFixed(1) + '%)(1−' + (brk.B * 100).toFixed(0) + '%)(1−' + (brk.D * 100).toFixed(0) + '%)(1−' + (brk.G_low * 100).toFixed(1) + '%)(1−' + (brk.S_low * 100).toFixed(1) + '%)</div>';
+    body += '<div class="sd-final"><span class="sd-final-label">殘血减傷率</span><span class="sd-final-value">' + (brk.R_low * 100).toFixed(1) + '%</span></div>';
   } else {
     // HP / ATK / CRIT / STUN
-    body += '<div class="sd-section-label">基础值</div>';
+    body += '<div class="sd-section-label">基礎值</div>';
     body += '<div class="sd-source-list">';
     body += srcRow(brk.baseItem);
     body += '</div>';
@@ -5429,37 +5429,37 @@ function openStatDetail(stat) {
       body += '<div class="sd-source-list">';
       brk.flatItems.forEach(function(s) {
         // Skip the defense synergy item (shown separately below)
-        if (s.name && s.name.indexOf('防御与支援') >= 0) return;
+        if (s.name && s.name.indexOf('防禦與支援') >= 0) return;
         body += srcRow(s);
       });
       if (hasMasteryFlat) {
-        body += '<div class="sd-sub-section">⭐ 人物专精</div>';
-        body += srcRow({name:'人物专精 HP上限', value:'+' + brk.masteryFlat.toLocaleString('en-US'), extra: '', cls:'mastery'});
+        body += '<div class="sd-sub-section">⭐ 大師戰技</div>';
+        body += srcRow({name:'大師戰技 HP上限', value:'+' + brk.masteryFlat.toLocaleString('en-US'), extra: '', cls:'mastery'});
       }
       if (hasSynergyDefFlat) {
-        body += '<div class="sd-sub-section">🔗 因子联动（防御与支援类）</div>';
-        body += srcRow({name:'防御与支援类因子数量加成', value:'+' + brk.synergyDefFlat.toLocaleString('en-US'), extra: '每因子+10,000 (上限4个)', cls:'synergy'});
+        body += '<div class="sd-sub-section">🔗 因子聯動（防禦與支援類）</div>';
+        body += srcRow({name:'防禦與支援類因子數量加成', value:'+' + brk.synergyDefFlat.toLocaleString('en-US'), extra: '每因子+10,000 (上限4個)', cls:'synergy'});
       }
       body += '</div>';
-      body += '<div class="sd-formula">固定加成合计 <strong>+' + Math.round(brk.flat) + '</strong></div>';
+      body += '<div class="sd-formula">固定加成合計 <strong>+' + Math.round(brk.flat) + '</strong></div>';
     }
 
     var formulaBase = brk.base.toLocaleString('en-US');
     var formulaFlat = brk.flat > 0 ? ' + ' + Math.round(brk.flat) : '';
 
     if (stat === 'atk') {
-      // --- 局外攻击力 ---
-      body += '<div class="sd-section-label">局外攻击力</div>';
+      // --- 局外攻擊力 ---
+      body += '<div class="sd-section-label">局外攻擊力</div>';
 
-      // 局外组1: 仅20%/30%专精 + 因子联动（不含专精树其他攻击力节点）
+      // 局外组1: 僅20%/30%戰技 + 因子聯動（不含戰技樹其他攻擊力節點）
       if (brk.outGroup1Items && brk.outGroup1Items.length > 0) {
-        body += '<div class="sd-section-label">组1: 专精 + 因子联动（加算）— 仅20%/30%专精</div>';
+        body += '<div class="sd-section-label">组1: 戰技 + 因子聯動（加算）— 僅20%/30%戰技</div>';
         body += '<div class="sd-source-list">';
         brk.outGroup1Items.forEach(function(s) { body += srcRow(s); });
         body += '</div>';
-        body += '<div class="sd-formula">组1合计 <strong>+' + (brk.outGroup1Pct || 0) + '% → ×' + (brk.outGroup1Multiplier || 1).toFixed(2) + '</strong></div>';
+        body += '<div class="sd-formula">组1合計 <strong>+' + (brk.outGroup1Pct || 0) + '% → ×' + (brk.outGroup1Multiplier || 1).toFixed(2) + '</strong></div>';
       } else {
-        body += '<div class="sd-formula">组1无加成 → ×1.00</div>';
+        body += '<div class="sd-formula">组1無加成 → ×1.00</div>';
       }
 
       // 组2: 因子加成（乘算）
@@ -5469,10 +5469,10 @@ function openStatDetail(stat) {
         body += '<div class="sd-source-list">';
         brk.group2Items.forEach(function(s) { body += srcRow(s); });
         body += '</div>';
-        body += '<div class="sd-formula">各因子之间为<strong>乘算</strong>，组2倍率 = <strong>×' + (brk.group2Multiplier || 1).toFixed(2) + '</strong></div>';
+        body += '<div class="sd-formula">各因子之間為<strong>乘算</strong>，组2倍率 = <strong>×' + (brk.group2Multiplier || 1).toFixed(2) + '</strong></div>';
       }
 
-      body += '<div class="sd-divider"><span>计算公式</span></div>';
+      body += '<div class="sd-divider"><span>計算公式</span></div>';
       var outG1Str = (brk.outGroup1Pct || 0) > 0 ? ' × (1 + ' + brk.outGroup1Pct + '%)' : '';
       var g2Formula = '';
       if (brk.group2Items && brk.group2Items.length > 0) {
@@ -5481,18 +5481,18 @@ function openStatDetail(stat) {
       body += '<div class="sd-formula">(' + formulaBase + formulaFlat + ')' + outG1Str + g2Formula + '</div>';
       body += '<div class="sd-formula">' + (formulaBase + (brk.flat > 0 ? ' + ' + Math.round(brk.flat) : '')) + ((brk.outGroup1Pct || 0) > 0 ? ' × ' + (brk.outGroup1Multiplier || 1).toFixed(2) : '') + (brk.group2Multiplier !== 1 ? ' × ' + (brk.group2Multiplier || 1).toFixed(2) : '') + '</div>';
 
-      body += '<div class="sd-final"><span class="sd-final-label">局外攻击力</span><span class="sd-final-value">' + data.final.toLocaleString('en-US') + '</span></div>';
+      body += '<div class="sd-final"><span class="sd-final-label">局外攻擊力</span><span class="sd-final-value">' + data.final.toLocaleString('en-US') + '</span></div>';
 
-      // --- 局内攻击力 ---
-      body += '<div class="sd-divider"><span>局内攻击力</span></div>';
+      // --- 局内攻擊力 ---
+      body += '<div class="sd-divider"><span>局内攻擊力</span></div>';
 
-      // 局内组1: 全部专精（含专精树节点）+ 因子联动
+      // 局内组1: 全部戰技（含戰技樹節點）+ 因子聯動
       if (brk.group1Items && brk.group1Items.length > 0) {
-        body += '<div class="sd-section-label">组1: 专精 + 因子联动（加算）— 含全部专精</div>';
+        body += '<div class="sd-section-label">组1: 戰技 + 因子聯動（加算）— 含全部戰技</div>';
         body += '<div class="sd-source-list">';
         brk.group1Items.forEach(function(s) { body += srcRow(s); });
         body += '</div>';
-        body += '<div class="sd-formula">组1合计 <strong>+' + (brk.group1Pct || 0) + '% → ×' + (brk.group1Multiplier || 1).toFixed(2) + '</strong></div>';
+        body += '<div class="sd-formula">组1合計 <strong>+' + (brk.group1Pct || 0) + '% → ×' + (brk.group1Multiplier || 1).toFixed(2) + '</strong></div>';
       }
 
       // 组2: 全部因子加成（乘算）
@@ -5502,10 +5502,10 @@ function openStatDetail(stat) {
         body += '<div class="sd-source-list">';
         brk.inGroup2Items.forEach(function(s) { body += srcRow(s); });
         body += '</div>';
-        body += '<div class="sd-formula">各因子之间为<strong>乘算</strong>，组2倍率 = <strong>×' + (brk.inGroup2Multiplier || 1).toFixed(2) + '</strong></div>';
+        body += '<div class="sd-formula">各因子之間為<strong>乘算</strong>，组2倍率 = <strong>×' + (brk.inGroup2Multiplier || 1).toFixed(2) + '</strong></div>';
       }
 
-      body += '<div class="sd-divider"><span>计算公式</span></div>';
+      body += '<div class="sd-divider"><span>計算公式</span></div>';
       var g1StrIn = brk.group1Pct > 0 ? ' × (1 + ' + brk.group1Pct + '%)' : '';
       var g2FormulaIn = '';
       if (brk.inGroup2Items && brk.inGroup2Items.length > 0) {
@@ -5514,7 +5514,7 @@ function openStatDetail(stat) {
       body += '<div class="sd-formula">(' + formulaBase + formulaFlat + ')' + g1StrIn + g2FormulaIn + '</div>';
       body += '<div class="sd-formula">' + (formulaBase + (brk.flat > 0 ? ' + ' + Math.round(brk.flat) : '')) + (brk.group1Pct > 0 ? ' × ' + (brk.group1Multiplier || 1).toFixed(2) : '') + (brk.inGroup2Multiplier !== 1 ? ' × ' + (brk.inGroup2Multiplier || 1).toFixed(2) : '') + '</div>';
 
-      body += '<div class="sd-final"><span class="sd-final-label">局内攻击力</span><span class="sd-final-value">' + data.inCombat.toLocaleString('en-US') + '</span></div>';
+      body += '<div class="sd-final"><span class="sd-final-label">局内攻擊力</span><span class="sd-final-value">' + data.inCombat.toLocaleString('en-US') + '</span></div>';
 
     } else if (stat === 'hp') {
       var showPct = (brk.pctItems && brk.pctItems.length > 0);
@@ -5523,11 +5523,11 @@ function openStatDetail(stat) {
         body += '<div class="sd-source-list">';
         brk.pctItems.forEach(function(s) { body += srcRow(s); });
         body += '</div>';
-        body += '<div class="sd-formula">各百分比加成之间为<strong>乘算</strong></div>';
+        body += '<div class="sd-formula">各百分比加成之間為<strong>乘算</strong></div>';
       } else {
-        body += '<div class="sd-formula">无百分比加成</div>';
+        body += '<div class="sd-formula">無百分比加成</div>';
       }
-      body += '<div class="sd-divider"><span>计算公式</span></div>';
+      body += '<div class="sd-divider"><span>計算公式</span></div>';
       var formulaPct = '';
       if (brk.pctItems && brk.pctItems.length > 0) {
         formulaPct = brk.pctItems.map(function(s) {
@@ -5536,12 +5536,12 @@ function openStatDetail(stat) {
         }).join('');
       }
       body += '<div class="sd-formula">(' + formulaBase + formulaFlat + ')' + formulaPct + '</div>';
-      body += '<div class="sd-final"><span class="sd-final-label">最终数值</span><span class="sd-final-value">' + data.final.toLocaleString('en-US') + '</span></div>';
+      body += '<div class="sd-final"><span class="sd-final-label">最终數值</span><span class="sd-final-value">' + data.final.toLocaleString('en-US') + '</span></div>';
     } else {
       // CRIT / STUN: simple addition
-      body += '<div class="sd-divider"><span>计算公式</span></div>';
+      body += '<div class="sd-divider"><span>計算公式</span></div>';
       body += '<div class="sd-formula">' + brk.base + (brk.flat > 0 ? ' + ' + Math.round(brk.flat) : '') + '</div>';
-      body += '<div class="sd-final"><span class="sd-final-label">最终数值</span><span class="sd-final-value">' + (stat === 'crit' ? data.final + '%' : data.final + '') + '</span></div>';
+      body += '<div class="sd-final"><span class="sd-final-label">最终數值</span><span class="sd-final-value">' + (stat === 'crit' ? data.final + '%' : data.final + '') + '</span></div>';
     }
   }
 
@@ -5554,7 +5554,7 @@ function closeStatDetail() {
 }
 
 function computeFactorTypeDetail() {
-  // 仅统计因子配装中"因子1"栏位的因子
+  // 僅統計因子配裝中"因子1"欄位的因子
   var cats = {
     basic: { names: {}, total: 0 },
     attack: { names: {}, total: 0 },
@@ -5565,7 +5565,7 @@ function computeFactorTypeDetail() {
     if (!name || name === 'null' || name === '0') return;
     var cat = getFactorSynergy(name);
     if (!cat) return;
-    // 支援类因子合并到防御与支援类中统计
+    // 支援類因子合並到防禦與支援類中統計
     if (cat === 'support') cat = 'defense';
     cats[cat].names[name] = (cats[cat].names[name] || 0) + 1;
     cats[cat].total++;
@@ -5579,22 +5579,22 @@ function computeFactorTypeDetail() {
 function buildTypeStatsHTML(detail) {
   if (!detail) detail = computeFactorTypeDetail();
   var catDefs = [
-    { key: 'basic', label: '基础类', colorKey: 'tch-basic', ccKey: 'tcc-basic' },
-    { key: 'attack', label: '攻击类', colorKey: 'tch-attack', ccKey: 'tcc-attack' },
-    { key: 'defense', label: '防御与支援类', colorKey: 'tch-defense', ccKey: 'tcc-defense' }
+    { key: 'basic', label: '基礎類', colorKey: 'tch-basic', ccKey: 'tcc-basic' },
+    { key: 'attack', label: '攻擊類', colorKey: 'tch-attack', ccKey: 'tcc-attack' },
+    { key: 'defense', label: '防禦與支援類', colorKey: 'tch-defense', ccKey: 'tcc-defense' }
   ];
   var totalAll = 0;
   catDefs.forEach(function(cd) { totalAll += detail[cd.key].total; });
 
   if (totalAll === 0) {
-    return '<div class="type-stats-empty">暂无因子数据</div>';
+    return '<div class="type-stats-empty">暂無因子數據</div>';
   }
 
   var h = '';
   catDefs.forEach(function(cd) {
     var info = detail[cd.key];
     h += '<div class="type-cat-section tcs-' + cd.key + '">';
-    h += '<div class="type-cat-header ' + cd.colorKey + '">' + cd.label + ' <span class="tch-total">总数量' + info.total + '</span></div>';
+    h += '<div class="type-cat-header ' + cd.colorKey + '">' + cd.label + ' <span class="tch-total">總數量' + info.total + '</span></div>';
     var names = Object.keys(info.names).sort();
     if (names.length > 0) {
       h += '<div class="type-cat-items">';
@@ -5603,7 +5603,7 @@ function buildTypeStatsHTML(detail) {
       });
       h += '</div>';
     } else {
-      h += '<div class="type-cat-empty">无</div>';
+      h += '<div class="type-cat-empty">無</div>';
     }
     h += '</div>';
   });
@@ -5621,7 +5621,7 @@ function renderSummary() {
   statsEl.innerHTML = buildTypeStatsHTML(computeFactorTypeDetail());
 
   if (items.length === 0) {
-    grid.innerHTML = '<div style="color:var(--text-dim);padding:12px;">暂无因子数据</div>';
+    grid.innerHTML = '<div style="color:var(--text-dim);padding:12px;">暂無因子數據</div>';
     totalEl.textContent = '0';
   } else {
     var html = '';
@@ -5632,7 +5632,7 @@ function renderSummary() {
 
       var lvHtml = '<span class="s-level ' + cls + '">' + it.capped + '</span>';
       if (it.overflow > 0) {
-        lvHtml = '<span class="s-level ' + cls + ' overflow" title="实际 ' + it.actual + '，超出上限 ' + it.overflow + ' 级">' + it.capped + '<span class="overflow-badge">+' + it.overflow + '</span></span>';
+        lvHtml = '<span class="s-level ' + cls + ' overflow" title="實際 ' + it.actual + '，超出上限 ' + it.overflow + ' 級">' + it.capped + '<span class="overflow-badge">+' + it.overflow + '</span></span>';
       }
       html += '<div class="summary-item" onclick="openFactorDetailModal(\'' + it.name.replace(/'/g, "\\'") + '\',' + it.capped + ')">' +
         '<span class="s-name cat-' + getFactorCategory(it.name) + '">' + it.name + '</span>' + lvHtml +
@@ -5641,7 +5641,7 @@ function renderSummary() {
 
     if (overflowCount > 0) {
       var wasted = totalActual - totalCapped;
-      html = '<div class="overflow-warning">⚠️ ' + overflowCount + ' 项因子超出上限，共浪费 <b>' + wasted + '</b> 级（有效 ' + totalCapped + ' / 实际 ' + totalActual + '）</div>' + html;
+      html = '<div class="overflow-warning">⚠️ ' + overflowCount + ' 项因子超出上限，共浪費 <b>' + wasted + '</b> 級（有效 ' + totalCapped + ' / 實際 ' + totalActual + '）</div>' + html;
     }
 
     grid.innerHTML = html;
@@ -5697,7 +5697,7 @@ function filterOptions(query) {
       if (!isFactorValidForChar(f)) return;
       // Summon stones: hide all character exclusive factors
       if (section === 'summons' && ALL_EXCLUSIVE_FACTORS[f]) return;
-      // 召唤石/武器祝福/因子配装：隐藏武器技能
+      // 召唤石/武器加護/因子配裝：隱藏武器技能
       if ((section === 'summons' || section === 'blessings' || section === 'factorPairs') && FACTOR_WEAPON_SKILL.indexOf(f) >= 0) return;
       html += '<div class="ss-option cat-' + getFactorCategory(f) + (f === selectedValue ? ' selected' : '') + '" data-value="' + f + '">' + f + '</div>';
     });
@@ -5708,7 +5708,7 @@ function filterOptions(query) {
         if (!isFactorValidForChar(f)) return;
         // Summon stones: hide all character exclusive factors
         if (section === 'summons' && ALL_EXCLUSIVE_FACTORS[f]) return;
-        // 召唤石/武器祝福/因子配装：隐藏武器技能
+        // 召唤石/武器加護/因子配裝：隱藏武器技能
         if ((section === 'summons' || section === 'blessings' || section === 'factorPairs') && FACTOR_WEAPON_SKILL.indexOf(f) >= 0) return;
         html += '<div class="ss-option cat-' + getFactorCategory(f) + (f === selectedValue ? ' selected' : '') + '" data-value="' + f + '">' + f + '</div>';
         hasMatch = true;
@@ -5864,17 +5864,17 @@ var BLESSING_DEFAULT_LVS = [20, 15, 10];
 function addEntry(section) {
   if (section === 'blessings') {
     if (state.blessings.length >= MAX_BLESSINGS) {
-      showToast('祝福最多 ' + MAX_BLESSINGS + ' 栏', 'warning');
+      showToast('加護最多 ' + MAX_BLESSINGS + ' 欄', 'warning');
       return;
     }
     var defLv = BLESSING_DEFAULT_LVS[state.blessings.length] || 10;
-    state.blessings.push(['攻击力', defLv]);
+    state.blessings.push(['攻擊力', defLv]);
   } else if (section === 'summons') {
     if (state.summons.length >= MAX_SUMMONS) {
-      showToast('召唤石最多 ' + MAX_SUMMONS + ' 栏', 'warning');
+      showToast('召唤石最多 ' + MAX_SUMMONS + ' 欄', 'warning');
       return;
     }
-    state.summons.push(['攻击力', 15]);
+    state.summons.push(['攻擊力', 15]);
   }
   renderAll();
   autoSave();
@@ -5892,10 +5892,10 @@ const MAX_FACTOR_PAIRS = 12;
 
 function addFactorPair() {
   if (state.factorPairs.length >= MAX_FACTOR_PAIRS) {
-    showToast('因子栏最多 ' + MAX_FACTOR_PAIRS + ' 个，无法继续添加', 'warning');
+    showToast('因子欄最多 ' + MAX_FACTOR_PAIRS + ' 個，無法繼續添加', 'warning');
     return;
   }
-  state.factorPairs.push(['攻击力', 15, '', 15]);
+  state.factorPairs.push(['攻擊力', 15, '', 15]);
   renderAll();
   autoSave();
 }
@@ -5965,52 +5965,52 @@ document.addEventListener('dragleave', function(e) {
 
 function clearAllFactors() {
   if (state.factorPairs.length === 0) {
-    showToast('因子配装栏位已为空', 'info');
+    showToast('因子配裝欄位已為空', 'info');
     return;
   }
-  if (confirm('确定要清空所有因子配装栏位吗？\n此操作仅清除因子配装栏，保留祝福和召唤石数据。')) {
+  if (confirm('確定要清空所有因子配裝欄位吗？\n此操作僅清除因子配裝欄，保留加護和召唤石數據。')) {
     state.factorPairs = [];
     document.getElementById('presetSelect').value = '';
     renderAll();
     autoSave();
-    showToast('因子配装栏位已清空', 'info');
+    showToast('因子配裝欄位已清空', 'info');
   }
 }
 
 function clearBlessings() {
   if (state.blessings.length === 0) {
-    showToast('祝福已为空', 'info');
+    showToast('加護已為空', 'info');
     return;
   }
-  if (confirm('确定要清空所有祝福数据吗？此操作仅清除祝福，不影响因子配装和召唤石。')) {
+  if (confirm('確定要清空所有加護數據吗？此操作僅清除加護，不影響因子配裝和召唤石。')) {
     state.blessings = [];
     renderAll();
     autoSave();
-    showToast('祝福数据已清空', 'info');
+    showToast('加護數據已清空', 'info');
   }
 }
 
 function clearSummons() {
   if (state.summons.length === 0) {
-    showToast('召唤石已为空', 'info');
+    showToast('召唤石已為空', 'info');
     return;
   }
-  if (confirm('确定要清空所有召唤石数据吗？此操作仅清除召唤石，不影响因子配装和祝福。')) {
+  if (confirm('確定要清空所有召唤石數據吗？此操作僅清除召唤石，不影響因子配裝和加護。')) {
     state.summons = [];
     renderAll();
     autoSave();
-    showToast('召唤石数据已清空', 'info');
+    showToast('召唤石數據已清空', 'info');
   }
 }
 
 function resetToDefault() {
-  if (confirm('确定要重置为默认配装吗？当前未保存的数据将丢失。')) {
+  if (confirm('確定要重置為默認配裝吗？當前未保存的數據將丢失。')) {
     state = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
     window.state = state;
     document.getElementById('presetSelect').value = '';
     renderAll();
-    // 不调用 autoSave，避免覆盖用户之前保存的数据
-    showToast('已重置为默认配装（未保存，刷新后恢复本地数据）', 'info');
+    // 不调用 autoSave，避免覆盖用户之前保存的數據
+    showToast('已重置為默認配裝（未保存，刷新後恢復本地數據）', 'info');
   }
 }
 
@@ -6029,7 +6029,7 @@ function clearMastery() {
   syncMasteryInputs();
   renderAll();
   autoSave();
-  showToast('人物专精已清空', 'info');
+  showToast('大師戰技已清空', 'info');
 }
 
 function clearLimitBreak() {
@@ -6092,12 +6092,12 @@ function onMasteryChange() {
   state.mastery.synDef = synD;
   state.mastery.synDef2 = synD2;
 
-  // 反向联动：人物专精 → 专精树
+  // 反向聯動：大師戰技 → 戰技樹
   if (typeof syncMasteryTreeFromPanel === 'function') {
     syncMasteryTreeFromPanel(state.character);
   }
 
-  // 正向回写：用实际可选的节点数修正面板计数，避免阶级上限导致面板虚高
+  // 正向回写：用實際可選的節點數修正面板計數，避免階級上限導致面板虛高
   if (typeof getMasteryTreeMasteryCounts === 'function') {
     var actual = getMasteryTreeMasteryCounts(state.character);
     state.mastery.hp = Math.min(actual.hp, 4);
@@ -6108,7 +6108,7 @@ function onMasteryChange() {
     state.mastery.synDef = Math.min(actual.synDef, 1);
   }
 
-  // 同步专精树界面（若已打开）
+  // 同步戰技樹界面（若已打開）
   if (typeof renderMasteryView === 'function') renderMasteryView();
 
   // Sync inputs after clamp and update button disabled states
@@ -6135,12 +6135,12 @@ function renderLimitBreak() {
   if (!grid) return;
   if (!state.limitBreak) {
     state.limitBreak = [
-      ['攻击力', 10, 1000], ['暴击率', 10, 20], ['HP', 10, 2000], ['昏厥值', 10, 20]
+      ['攻擊力', 10, 1000], ['爆擊機率', 10, 20], ['HP', 10, 2000], ['暈眩值', 10, 20]
     ];
   }
   // Ensure 4 entries
   while (state.limitBreak.length < 4) {
-    state.limitBreak.push(['攻击力', 10, 2000]);
+    state.limitBreak.push(['攻擊力', 10, 2000]);
   }
   while (state.limitBreak.length > 4) {
     state.limitBreak.pop();
@@ -6167,7 +6167,7 @@ function renderLimitBreak() {
     html += '<input class="limit-break-level-input" type="number" value="' + (level > 0 ? level : '') + '" min="1" max="10" placeholder="1-10" onchange="limitBreakLevelSet(' + i + ', this.value)">';
     html += '<button class="limit-break-level-btn" onclick="limitBreakLevelChange(' + i + ', 1)"' + (level <= 0 ? ' disabled' : '') + '>+</button>';
     html += '</div>';
-    html += '<input class="limit-break-value-input" type="number" value="' + value + '" min="0" max="' + getLimitBreakMax(skill) + '" onchange="limitBreakValueSet(' + i + ', this.value)" placeholder="数值">';
+    html += '<input class="limit-break-value-input" type="number" value="' + value + '" min="0" max="' + getLimitBreakMax(skill) + '" onchange="limitBreakValueSet(' + i + ', this.value)" placeholder="數值">';
     html += '</div>';
   }
   grid.innerHTML = html;
@@ -6216,7 +6216,7 @@ function limitBreakLevelSet(idx, val) {
 }
 
 function getLimitBreakMax(skillName) {
-  if (skillName === '攻击力') return 1000;
+  if (skillName === '攻擊力') return 1000;
   if (skillName === 'HP') return 2000;
   return 20;
 }
@@ -6260,7 +6260,7 @@ function renderAll() {
 
 // ============ CHARACTER FUNCTIONS ============
 function getCurrentChar() {
-  return CHARACTER_I[state.character] || CHARACTER_I['主人公'];
+  return CHARACTER_I[state.character] || CHARACTER_I['主角'];
 }
 
 var charSelectInited = false;
@@ -6386,7 +6386,7 @@ function filterCharacterSelect(text) {
   var list = document.getElementById('characterSelectList');
   if (!list) return;
   var query = (text || '').toLowerCase().trim();
-  var current = state.character || '主人公';
+  var current = state.character || '主角';
   var html = '';
   var count = 0;
   for (var i = 0; i < CHARACTERS.length; i++) {
@@ -6398,7 +6398,7 @@ function filterCharacterSelect(text) {
     count++;
   }
   if (count === 0) {
-    html = '<div class="char-select-empty">无匹配角色</div>';
+    html = '<div class="char-select-empty">無匹配角色</div>';
   }
   list.innerHTML = html;
   var items = list.querySelectorAll('.char-select-item');
@@ -6422,7 +6422,7 @@ function renderCharacterSelect() {
   initCharacterSelect();
   var trigger = document.getElementById('characterSelectTrigger');
   if (trigger) {
-    var currentChar = CHARACTER_I[state.character] ? state.character : '主人公';
+    var currentChar = CHARACTER_I[state.character] ? state.character : '主角';
     trigger.textContent = currentChar;
   }
   // If dropdown is open, refresh list preserving current search query
@@ -6440,8 +6440,8 @@ function renderCharacterInfo() {
   var el = document.getElementById('characterInfo');
   if (!el) return;
   var c = getCurrentChar();
-  var info = '武器数：' + c.weaponCount + '把 | 防御词条：' + c.defenseSkill + ' | 攻击加成：' + c.attackStyle;
-  info += ' | 专属：' + c.exclusiveGroup;
+  var info = '武器數：' + c.weaponCount + '把 | 防禦詞條：' + c.defenseSkill + ' | 攻擊加成：' + c.attackStyle;
+  info += ' | 專屬：' + c.exclusiveGroup;
   el.textContent = info;
 }
 
@@ -6467,9 +6467,9 @@ function applyMasteryByChar() {
       state.mastery.atk30 = 0;
     }
   }
-  // 联动：将专精树已激活的"人物专精"类节点数量同步到计数器
+  // 聯動：將戰技樹已激活的"大師戰技"類節點數量同步到計數器
   if (typeof syncMasteryFromTree === 'function') syncMasteryFromTree(state.character);
-  // 切换 20%/30% 攻击力显示后，重新自适应文字
+  // 切换 20%/30% 攻擊力顯示後，重新自適應文字
   if (typeof setupMasteryTextFit === 'function') setupMasteryTextFit();
 }
 
@@ -6515,9 +6515,9 @@ function onCharacterChange(newCharId) {
   // Set new character
   state.character = newCharId;
 
-  // Validate weapon: if currently on 弱点武器/昏厥武器 and new char is 4-weapon, switch to 觉醒武器
-  if (newChar.weaponCount === 4 && (state.weapon === '弱点武器' || state.weapon === '昏厥武器')) {
-    state.weapon = '觉醒武器';
+  // Validate weapon: if currently on 弱點武器/暈眩武器 and new char is 4-weapon, switch to 覺醒武器
+  if (newChar.weaponCount === 4 && (state.weapon === '弱點武器' || state.weapon === '暈眩武器')) {
+    state.weapon = '覺醒武器';
   }
 
   // Validate weapon skill 1: if the current value is invalid for this weapon/character, fall back to defenseSkill
@@ -6615,13 +6615,13 @@ function isFactorValidForChar(factorName) {
         if (data.mastery.synDef === undefined) data.mastery.synDef = 0;
         if (data.mastery.synDef2 === undefined) data.mastery.synDef2 = 0;
         if (!data.limitBreak || !Array.isArray(data.limitBreak) || data.limitBreak.length !== 4) {
-          data.limitBreak = [['攻击力', 10, 2000], ['暴击率', 10, 20], ['HP', 10, 5000], ['昏厥值', 10, 50]];
+          data.limitBreak = [['攻擊力', 10, 2000], ['爆擊機率', 10, 20], ['HP', 10, 5000], ['暈眩值', 10, 50]];
         }
-        data.limitBreak.forEach(function(e, i) { if (!e || e.length < 3) data.limitBreak[i] = ['攻击力', 10, 2000]; });
+        data.limitBreak.forEach(function(e, i) { if (!e || e.length < 3) data.limitBreak[i] = ['攻擊力', 10, 2000]; });
         migrateWeaponSkills(data);
-        // Handle character: if not set or invalid, default to 主人公
+        // Handle character: if not set or invalid, default to 主角
         if (!data.character || !CHARACTER_I[data.character]) {
-          data.character = '主人公';
+          data.character = '主角';
         }
         state = data;
         window.state = state;
@@ -6632,10 +6632,10 @@ function isFactorValidForChar(factorName) {
   } catch(e) { /* use default */ }
   renderAll();
   
-  // ─── 专精树集成 ───
+  // ─── 戰技樹集成 ───
   window.openMasteryTree = function() {
     if (typeof MTH === 'undefined' || typeof MASTERY_DATA === 'undefined') {
-      alert('专精数据未加载，请确保 mastery_data_compact.js 和 mastery_tree.js 已放置在服务器上。');
+      alert('戰技數據未加載，請確保 mastery_data_compact.js 和 mastery_tree.js 已放置在服务器上。');
       return;
     }
     MTH.open(state.character);
@@ -6664,30 +6664,30 @@ function isFactorValidForChar(factorName) {
   }
 
   function getCategoryLabel(cat) {
-    var map = { basic: '基础', attack: '攻击', defense: '防御', support: '辅助', special: '特殊', weapon: '武器' };
+    var map = { basic: '基礎', attack: '攻擊', defense: '防禦', support: '輔助', special: '特殊', weapon: '武器' };
     return map[cat] || '特殊';
   }
 
   function formatMultiEffectText(effects) {
     if (!effects || effects.length === 0) return '';
 
-    // 构建占位符映射 <数据1> / <数值1> → 对应 effect 的 value
+    // 構建占位符映射 <數據1> / <數值1> → 对應 effect 的 value
     var valueMap = {};
     effects.forEach(function(e, i) {
-      valueMap['<数据' + (i + 1) + '>'] = e.value || '';
-      valueMap['<数值' + (i + 1) + '>'] = e.value || '';
+      valueMap['<數據' + (i + 1) + '>'] = e.value || '';
+      valueMap['<數值' + (i + 1) + '>'] = e.value || '';
     });
 
     // 先替换所有占位符
     var resolved = [];
     effects.forEach(function(ef) {
       var label = ef.label || '';
-      var hadPlaceholder = /<(数据|数值)\d+>/.test(label);
+      var hadPlaceholder = /<(數據|數值)\d+>/.test(label);
       for (var key in valueMap) {
         if (valueMap.hasOwnProperty(key)) label = label.split(key).join(valueMap[key]);
       }
-      if (/<(数据|数值)\d+>/.test(label) || !hadPlaceholder) {
-        label = label.replace(/<(数据|数值)\d+>/g, '').replace(/[+\s]+$/g, '');
+      if (/<(數據|數值)\d+>/.test(label) || !hadPlaceholder) {
+        label = label.replace(/<(數據|數值)\d+>/g, '').replace(/[+\s]+$/g, '');
         var v = ef.value || '';
         var sign = /^[+-]/.test(v) ? '' : (v ? '+' : '');
         label = label + ' ' + sign + v;
@@ -6695,7 +6695,7 @@ function isFactorValidForChar(factorName) {
       resolved.push(label);
     });
 
-    // 将纯括号条件标签合并到前一个效果（如 （最大HP不低于45000））
+    // 將纯括號條件標簽合並到前一個效果（如 （最大HP不低于45000））
     var merged = [];
     for (var i = 0; i < resolved.length; i++) {
       var item = resolved[i];
@@ -6706,7 +6706,7 @@ function isFactorValidForChar(factorName) {
       }
     }
 
-    // 提取末尾（...）形式的公共条件后缀
+    // 提取末尾（...）形式的公共條件後缀
     var suffixes = [];
     var stripped = [];
     merged.forEach(function(item) {
@@ -6722,7 +6722,7 @@ function isFactorValidForChar(factorName) {
       if (suffixes[i] !== commonSuffix) { commonSuffix = ''; break; }
     }
 
-    // 若有公共后缀则提取到末尾；否则各项保留各自条件（如 伤害上限轰天）
+    // 若有公共後缀则提取到末尾；否则各项保留各自條件（如 傷害上限轟天）
     if (commonSuffix) {
       return stripped.join(' / ') + commonSuffix;
     } else {
@@ -6731,7 +6731,7 @@ function isFactorValidForChar(factorName) {
   }
 
   function getFactorEffectDisplay(data) {
-    if (!data) return '无数据';
+    if (!data) return '無數據';
     if (data.text && data.value) { return escapeHtml(data.text) + escapeHtml(data.value); }
     if (data.effects && data.effects.length > 0) { return escapeHtml(formatMultiEffectText(data.effects)); }
     if (data.text) return escapeHtml(data.text);
@@ -6754,7 +6754,7 @@ function isFactorValidForChar(factorName) {
     }
 
     if (specialLv !== null) {
-      sources.push({ label: '特殊因子固定等级', level: specialLv });
+      sources.push({ label: '特殊因子固定等級', level: specialLv });
       return { sources: sources, total: specialLv };
     }
 
@@ -6764,16 +6764,16 @@ function isFactorValidForChar(factorName) {
       }
     });
     w.awakenBonus.forEach(function(item) {
-      if (item[0] === name) pushSource('武器觉醒奖励', item[1]);
+      if (item[0] === name) pushSource('武器覺醒奖励', item[1]);
     });
     if (state.weaponSkill1 && state.weaponSkill1[0] === name) {
-      pushSource('武器技能栏 1', getWeaponSkillEffectiveLv(state.weaponSkill1[1] || 25, awakenLv));
+      pushSource('武器技能欄 1', getWeaponSkillEffectiveLv(state.weaponSkill1[1] || 25, awakenLv));
     }
     if (state.weaponSkill2 && state.weaponSkill2[0] === name) {
-      pushSource('武器技能栏 2', getWeaponSkillEffectiveLv(state.weaponSkill2[1] || 10, awakenLv));
+      pushSource('武器技能欄 2', getWeaponSkillEffectiveLv(state.weaponSkill2[1] || 10, awakenLv));
     }
     state.blessings.forEach(function(item, idx) {
-      if (item[0] === name) pushSource('祝福 ' + (idx + 1), item[1]);
+      if (item[0] === name) pushSource('加護 ' + (idx + 1), item[1]);
     });
     state.factorPairs.forEach(function(item, idx) {
       if (item[0] === name) pushSource('因子槽 ' + (idx + 1) + ' · 主', item[1] + (w.factorEnhance > 0 ? w.factorEnhance : 0));
@@ -6790,20 +6790,20 @@ function isFactorValidForChar(factorName) {
     var info = getFactorLevelSources(name);
     var html = '';
     if (info.sources.length === 0) {
-      html += '<div class="fd-source-row"><span class="fd-source-name">无来源</span><span class="fd-source-lv">0</span></div>';
+      html += '<div class="fd-source-row"><span class="fd-source-name">無来源</span><span class="fd-source-lv">0</span></div>';
     } else {
       info.sources.forEach(function(s) {
         html += '<div class="fd-source-row"><span class="fd-source-name">' + escapeHtml(s.label) + '</span><span class="fd-source-lv">+' + s.level + '</span></div>';
       });
     }
-    html += '<div class="fd-source-row total"><span class="fd-source-name">合计</span><span class="fd-source-lv">' + info.total + '</span></div>';
+    html += '<div class="fd-source-row total"><span class="fd-source-name">合計</span><span class="fd-source-lv">' + info.total + '</span></div>';
     document.getElementById('fdSourceList').innerHTML = html;
   }
 
   function renderFactorLevelList(name, currentLevel, maxLevel) {
     var list = document.getElementById('fdLevelList');
     var dataObj = FACTOR_EFFECT_DATA[name] || {};
-    // 只显示 Excel/数据中有实际效果的等级，隐藏无数据等级
+    // 只顯示 Excel/數據中有實際效果的等級，隱藏無數據等級
     var levels = Object.keys(dataObj).map(Number).filter(function(n) { return !isNaN(n); }).sort(function(a, b) { return a - b; });
     var html = '';
     levels.forEach(function(lv) {
@@ -6832,7 +6832,7 @@ function isFactorValidForChar(factorName) {
     if (currentLevel > maxLevel) displayLv = currentLevel + '（上限 ' + maxLevel + '）';
     document.getElementById('fdLevel').textContent = 'Lv.' + displayLv + ' / ' + maxLevel;
 
-    // 当前等级可能没有单独数据，取不超过当前等级的最大可用等级
+    // 當前等級可能没有單獨數據，取不超過當前等級的最大可用等級
     function getFactorLevelData(factorName, lv) {
       var dataObj = FACTOR_EFFECT_DATA[factorName];
       if (!dataObj) return null;
@@ -6840,7 +6840,7 @@ function isFactorValidForChar(factorName) {
       return levels.length ? dataObj[levels[levels.length - 1]] : null;
     }
     var data = getFactorLevelData(name, cappedLv);
-    document.getElementById('fdDesc').textContent = data && data.desc ? data.desc : '暂无技能说明';
+    document.getElementById('fdDesc').textContent = data && data.desc ? data.desc : '暂無技能说明';
 
     document.getElementById('fdOverlay').classList.add('active');
 
@@ -6862,12 +6862,12 @@ function isFactorValidForChar(factorName) {
       <div class="fd-icon">✦</div>
       <div class="fd-title-wrap">
         <div class="fd-title-row">
-          <span class="fd-title" id="fdTitle">因子名称</span>
-          <span class="fd-cat" id="fdCategory">基础</span>
+          <span class="fd-title" id="fdTitle">因子名稱</span>
+          <span class="fd-cat" id="fdCategory">基礎</span>
         </div>
         <div class="fd-lv" id="fdLevel">Lv.0 / 0</div>
       </div>
-      <button class="fd-close" onclick="closeFactorDetailModal()" title="关闭">✕</button>
+      <button class="fd-close" onclick="closeFactorDetailModal()" title="關閉">✕</button>
     </div>
     <div class="fd-body">
       <div class="fd-section">
@@ -6875,11 +6875,11 @@ function isFactorValidForChar(factorName) {
         <div class="fd-desc-box" id="fdDesc">-</div>
       </div>
       <div class="fd-section">
-        <div class="fd-section-title">逐级效果</div>
+        <div class="fd-section-title">逐級效果</div>
         <div class="fd-level-list" id="fdLevelList"></div>
       </div>
       <div class="fd-section">
-        <div class="fd-section-title">等级来源</div>
+        <div class="fd-section-title">等級来源</div>
         <div class="fd-source-list" id="fdSourceList"></div>
       </div>
     </div>
@@ -6889,3 +6889,4 @@ function isFactorValidForChar(factorName) {
 
 
 </body></html>
+
