@@ -3357,18 +3357,18 @@ function getWeaponSubStats(weaponKey) {
   var w = WEAPONS[weaponKey];
   if (!w) return [];
   var subStats = w.subStats.slice();
-  if (weaponKey === '防御武器') {
+  if (weaponKey === '防禦武器') {
     var c = getCurrentChar();
     if (subStats[0]) {
-      var lvl = (c.defenseSkill === '金刚') ? 30 : subStats[0][1];
+      var lvl = (c.defenseSkill === '金剛') ? 30 : subStats[0][1];
       subStats[0] = [c.defenseSkill, lvl];
     }
   }
   return subStats;
 }
 
-// Get dynamic weapon skill options. For 防御武器, swap 金刚↔体力 in dropdowns
-// based on the character's defenseSkill (the fixed sub-stat already has 金刚 at level 30 or 体力 at level 35).
+// Get dynamic weapon skill options. For 防禦武器, swap 金剛↔體力 in dropdowns
+// based on the character's defenseSkill (the fixed sub-stat already has 金剛 at level 30 or 體力 at level 35).
 // charOverride: optional CHARACTER_I entry, used during data migration before state is set.
 function getWeaponSkillOptions(weaponKey, skillNum, charOverride) {
   var w = WEAPONS[weaponKey];
@@ -3376,17 +3376,17 @@ function getWeaponSkillOptions(weaponKey, skillNum, charOverride) {
   var key = 'weaponSkill' + skillNum;
   if (!w[key]) return [];
   var options = w[key].options.slice();
-  if (weaponKey === '防御武器') {
+  if (weaponKey === '防禦武器') {
     var c = charOverride || getCurrentChar();
-    if (c && c.defenseSkill === '金刚') {
-      var idx = options.indexOf('金刚');
-      if (idx >= 0) options[idx] = '体力';
+    if (c && c.defenseSkill === '金剛') {
+      var idx = options.indexOf('金剛');
+      if (idx >= 0) options[idx] = '體力';
     }
   }
-  // 巴武：根据角色返回不同的技能列表
+  // 巴武：根據角色返回不同的技能列表
   if (weaponKey === '巴武') {
     var ch = charOverride || getCurrentChar();
-    var baseSkills = ['背水','HP吸收','热血','暴君','OVERDRIVE特效','格挡仇火','刀上舞','自愈','凝神'];
+    var baseSkills = ['背水','HP吸收','渾身','暴君','OVERDRIVE特攻','逆襲(防禦)','一線之隔','自愈','聚精會神'];
     if (ch && ch.bahaSkill && baseSkills.indexOf(ch.bahaSkill) === -1) {
       baseSkills.push(ch.bahaSkill);
     }
@@ -3395,13 +3395,13 @@ function getWeaponSkillOptions(weaponKey, skillNum, charOverride) {
   return options;
 }
 
-// Cap-related factor names (used alongside 伤害上限 classification)
+// Cap-related factor names (used alongside 傷害上限 classification)
 function isChaoFanSkill(name) { return CHAOFAN_SKILLS.indexOf(name) !== -1; }
 
-// 计算武器自带技能的有效等级（受觉醒等级影响）
-// 因子强化：始终满级，不受觉醒等级影响
-// 超凡技能：觉醒10级解锁满级；否则未解锁（0级）
-// 其他技能：有效等级 = 原等级 - 10 + 觉醒等级；最低0级，最高不超过原等级
+// 計算武器自带技能的有效等級（受覺醒等級影響）
+// 因子强化：始终滿級，不受覺醒等級影響
+// 超凡技能：覺醒10級解鎖滿級；否则未解鎖（0級）
+// 其他技能：有效等級 = 原等級 - 10 + 覺醒等級；最低0級，最高不超過原等級
 function getSubStatEffectiveLevel(name, originalLv, awakenLevel) {
   if (!name) return 0;
   if (name === '因子强化') return originalLv;
@@ -3411,8 +3411,8 @@ function getSubStatEffectiveLevel(name, originalLv, awakenLevel) {
   return Math.max(0, Math.min(originalLv, originalLv - 10 + awakenLevel));
 }
 
-// 计算下拉武器技能的有效等级（受觉醒等级影响）
-// 觉醒0级时不可用；每级提升1级，从(原等级-10)起步
+// 計算下拉武器技能的有效等級（受覺醒等級影響）
+// 覺醒0級時不可用；每級提升1級，從(原等級-10)起步
 function getWeaponSkillEffectiveLv(originalLv, awakenLevel) {
   if (!awakenLevel || awakenLevel <= 0) return 0;
   return Math.max(0, originalLv - 10 + awakenLevel);
