@@ -2779,25 +2779,25 @@ body {
 
 <!-- HEADER -->
 <div class="header" id="simulatorHeader">
-  <h1>🌸 碧蓝幻想 Relink · 因子配装模拟器</h1>
+  <h1>🌸 碧藍幻想 Relink · 因子配裝模擬器</h1>
   <div class="subtitle">Granblue Fantasy Relink — Factor Build Simulator</div>
 </div>
 
 <!-- TOOLBAR -->
 <div class="toolbar" id="toolbar">
-  <button class="btn" onclick="exportBuild()" title="导出为JSON文件">📤 导出</button>
-  <button class="btn" onclick="openImportModal()" title="从JSON文件导入">📥 导入</button>
+  <button class="btn" onclick="exportBuild()" title="導出為JSON文件">📤 導出</button>
+  <button class="btn" onclick="openImportModal()" title="從JSON文件導入">📥 導入</button>
   <span class="btn-separator"></span>
-  <button class="btn" onclick="captureScreenshot()" title="保存为图片">📸 截图</button>
-  <button class="btn" onclick="openShareModal()" title="生成分享码，将当前配装分享给其他人">📋 分享配装码</button>
-  <button class="btn" onclick="exportPEBuild()" title="导出为 GBFR PE Patch Tool 兼容格式">🔧 导出因子配装</button>
-  <button class="btn" onclick="document.getElementById(&#39;peFileInput&#39;).click()" title="导入之前导出的因子配装文件">📥 导入因子配装</button>
+  <button class="btn" onclick="captureScreenshot()" title="保存為圖片">📸 截圖</button>
+  <button class="btn" onclick="openShareModal()" title="生成分享碼，將當前配裝分享给其他人">📋 分享配裝碼</button>
+  <button class="btn" onclick="exportPEBuild()" title="導出為 GBFR PE Patch Tool 兼容格式">🔧 導出因子配裝</button>
+  <button class="btn" onclick="document.getElementById(&#39;peFileInput&#39;).click()" title="導入之前導出的因子配裝文件">📥 導入因子配裝</button>
   <input type="file" id="peFileInput" accept=".json" style="display:none;">
   <span class="btn-separator"></span>
   <select class="preset-select" id="presetSelect">
-    <option value="">-- 选择预设配装 --</option>
+    <option value="">-- 選擇預設配裝 --</option>
   </select>
-  <button class="btn primary" onclick="openSavePresetModal()" title="保存当前配装到预设">💾 保存到预设</button>
+  <button class="btn primary" onclick="openSavePresetModal()" title="保存當前配裝到預設">💾 保存到預設</button>
   <button class="btn danger" onclick="resetToDefault()">↺ 重置</button>
 </div>
 
@@ -2807,17 +2807,17 @@ body {
 <!-- MODAL -->
 <div class="modal-overlay hidden" id="modalOverlay">
   <div class="modal">
-    <h2 id="modalTitle">导入配装数据</h2>
+    <h2 id="modalTitle">導入配裝數據</h2>
     <p style="color:var(--text-dim);font-size:0.85em;margin-bottom:8px;">
-      请粘贴之前导出的 JSON 数据，或点击下方选择 JSON 文件。
+      請黏貼之前導出的 JSON 數據，或點擊下方選擇 JSON 文件。
     </p>
-    <textarea id="modalTextarea" placeholder="粘贴JSON数据..."></textarea>
+    <textarea id="modalTextarea" placeholder="黏貼JSON數據..."></textarea>
     <div style="margin-top:8px;">
       <input type="file" id="modalFileInput" accept=".json" style="font-size:0.85em;color:var(--text-dim);">
     </div>
     <div class="modal-actions">
       <button class="btn btn-reset" onclick="closeModal()">取消</button>
-      <button class="btn btn-add" onclick="executeImport()">确认导入</button>
+      <button class="btn btn-add" onclick="executeImport()">確認導入</button>
     </div>
   </div>
 </div>
@@ -2825,38 +2825,38 @@ body {
 <!-- SAVE PRESET MODAL -->
 <div class="modal-overlay hidden" id="savePresetOverlay">
   <div class="modal">
-    <h2>💾 保存到预设</h2>
+    <h2>💾 保存到預設</h2>
     <p style="color:var(--text-dim);font-size:0.85em;margin-bottom:8px;">
-      输入名称将当前配装保存到预设列表：
+      输入名稱將當前配裝保存到預設列表：
     </p>
-    <input type="text" id="savePresetName" placeholder="输入预设名称..." style="width:100%;padding:10px 12px;border:1px solid var(--card-border);border-radius:6px;font-size:0.95em;font-family:inherit;color:var(--text);background:var(--input-bg);outline:none;box-sizing:border-box;" maxlength="30">
+    <input type="text" id="savePresetName" placeholder="输入預設名稱..." style="width:100%;padding:10px 12px;border:1px solid var(--card-border);border-radius:6px;font-size:0.95em;font-family:inherit;color:var(--text);background:var(--input-bg);outline:none;box-sizing:border-box;" maxlength="30">
     <div id="savePresetMsg" style="color:var(--danger);font-size:0.82em;margin-top:4px;min-height:18px;"></div>
     <div class="modal-actions">
       <button class="btn btn-reset" onclick="closeSavePresetModal()">取消</button>
-      <button class="btn btn-add" onclick="executeSavePreset()">确认保存</button>
+      <button class="btn btn-add" onclick="executeSavePreset()">確認保存</button>
     </div>
-    <div id="customPresetList" style="margin-top:16px;border-top:1px solid var(--card-border);padding-top:12px;"><div style="color:var(--text-dim);font-size:0.82em;">暂无「卡莉奥丝特罗」的自定义预设</div></div>
+    <div id="customPresetList" style="margin-top:16px;border-top:1px solid var(--card-border);padding-top:12px;"><div style="color:var(--text-dim);font-size:0.82em;">暂無「巴薩拉加」的自定義預設</div></div>
   </div>
 </div>
 
 <!-- SHARE CODE MODAL -->
 <div class="modal-overlay hidden" id="shareModalOverlay">
   <div class="modal">
-    <h2>📋 分享配装</h2>
+    <h2>📋 分享配裝</h2>
     <p style="color:var(--text-dim);font-size:0.85em;margin-bottom:10px;">
-      复制下方分享码发送给其他人，对方可通过分享码还原当前配装。
+      複製下方分享碼發送给其他人，对方可通過分享碼还原當前配裝。
     </p>
     <div class="share-code-box">
       <div class="share-code-display empty" id="shareCodeDisplay">生成中...</div>
-      <button class="share-btn-copy" onclick="copyShareCode()" title="复制分享码到剪贴板">📋<br>复制</button>
+      <button class="share-btn-copy" onclick="copyShareCode()" title="複製分享碼到剪貼板">📋<br>複製</button>
     </div>
-    <div class="share-divider">— 或粘贴分享码还原配装 —</div>
+    <div class="share-divider">— 或黏貼分享碼还原配裝 —</div>
     <div class="share-restore-box">
-      <input type="text" class="share-restore-input" id="shareRestoreInput" placeholder="在此粘贴分享码..." oninput="onShareInputChange()">
+      <input type="text" class="share-restore-input" id="shareRestoreInput" placeholder="在此黏貼分享碼..." oninput="onShareInputChange()">
       <button class="share-btn-restore" id="shareRestoreBtn" onclick="restoreFromShareCode()" disabled="">还原</button>
     </div>
     <div class="modal-actions" style="margin-top:16px;">
-      <button class="btn btn-reset" onclick="closeShareModal()">关闭</button>
+      <button class="btn btn-reset" onclick="closeShareModal()">關閉</button>
     </div>
   </div>
 </div>
@@ -2866,10 +2866,11 @@ body {
   <div class="stat-detail-modal">
     <div class="sd-modal-header">
       <span class="sd-h-icon" id="sdIcon">📊</span>
-      <span class="sd-h-title" id="sdTitle">属性详情</span>
+      <span class="sd-h-title" id="sdTitle">屬性詳情</span>
       <button class="sd-h-close" onclick="closeStatDetail()">✕</button>
     </div>
     <div class="sd-modal-body" id="sdBody"></div>
+
   </div>
 </div>
 
